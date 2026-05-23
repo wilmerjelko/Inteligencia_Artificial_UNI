@@ -161,15 +161,15 @@
     {\normalsize Grupo 2}
 
     \vspace{1cm}
-    \begin{tabular}{ll}
+    \begin{tabular}{cl}
         \toprule
-        \textbf{Integrante} & \textbf{Código} \\
+        \textbf{N°} & \textbf{Integrante} \\
         \midrule
-        Montes Espinoza, Anahys        & MIA--2024--001 \\
-        Vizcardo Flores, Christian      & MIA--2024--002 \\
-        Massa Quispe, Cristhian         & MIA--2024--003 \\
-        Huali Condori, Freddy           & MIA--2024--004 \\
-        Lazaro Galarza, Wilmer          & MIA--2024--005 \\
+        1 & Montes Espinoza, Anahys \\
+        2 & Vizcardo Flores, Christian \\
+        3 & Massa Quispe, Cristhian \\
+        4 & Huali Condori, Freddy \\
+        5 & Lazaro Galarza, Wilmer \\
         \bottomrule
     \end{tabular}
 
@@ -203,6 +203,7 @@ rendimiento, mostrando un rendimiento promedio predicho de
 AgTech, papa nativa, ETL, machine learning, dashboard, Huangascar.
 \end{abstract}
 
+\newpage
 \tableofcontents
 \newpage
 
@@ -495,7 +496,7 @@ $\Leftarrow$ &
 \textit{Parquet + CSV} \\
 $\Downarrow$ & & & $\searrow$ & \\
 \hline
-\multicolumn{5}{c}{\textcolor{agrogris}{\textbf{Dashboard Streamlit}} \quad http://localhost:8501} \\
+\multicolumn{5}{c}{\textcolor{agrogris}{\textbf{Dashboard Streamlit}} \quad \href{https://agrosmart-andino.streamlit.app/}{https://agrosmart-andino.streamlit.app/}} \\
 \hline
 \end{tabular}
 \caption{Arquitectura del sistema AgroSmart Andino}
@@ -902,12 +903,21 @@ manteniendo independencia del backend Cassandra para la visualización.
     ET\textsubscript{0}, déficit hídrico y horas de riego recomendadas.
 \end{enumerate}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{dashboard_full.png}
+  \caption{Dashboard AgroSmart Andino en ejecución local — estado en tiempo real
+    del NODO-001 (Parcela Baja, 3\,000 m.s.n.m.): semáforo de alerta,
+    KPI cards, alertas activas y métricas climáticas del período.}
+  \label{fig:dashboard}
+\end{figure}
+
 \subsection{Ejecución}
 
 \begin{lstlisting}[style=bashstyle, caption={Ejecución del dashboard}]
 cd agrosmart_andino/
 streamlit run dashboard/app.py
-# Acceso: http://localhost:8501
+# Acceso: https://agrosmart-andino.streamlit.app/
 \end{lstlisting}
 
 % ============================================================
@@ -1260,7 +1270,7 @@ python scripts/cassandra/08_load_data.py --host 127.0.0.1
 
 # 7. Iniciar Dashboard
 streamlit run dashboard/app.py
-# Acceso: http://localhost:8501
+# Acceso: https://agrosmart-andino.streamlit.app/
 \end{lstlisting}
 
 \section{Configuración de credenciales AWS}
@@ -1273,12 +1283,5 @@ AWS_SESSION_TOKEN=...
 AWS_DEFAULT_REGION=us-east-1
 S3_BUCKET=agrosmart-andino-demo
 \end{lstlisting}
-
-\begin{alertbox}[Nota importante — AWS Academy]
-Las credenciales de AWS Academy expiran cada 4 horas. Renovar antes de
-ejecutar los scripts AWS (05, 06) y antes de abrir el notebook en EMR.
-El tiempo de vida del clúster EMR es de máximo 3 horas en la sesión
-de laboratorio.
-\end{alertbox}
 
 \end{document}
