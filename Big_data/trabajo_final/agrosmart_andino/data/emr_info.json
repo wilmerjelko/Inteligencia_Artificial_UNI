@@ -1,0 +1,7 @@
+{
+  "cluster_id": "j-AU7UN46M7IPU",
+  "master_dns": "ec2-100-27-236-137.compute-1.amazonaws.com",
+  "jupyterhub_url": "https://ec2-100-27-236-137.compute-1.amazonaws.com:9443",
+  "region": "us-east-1",
+  "bucket": "agrosmart-andino-demo"
+}

@@ -1,0 +1,53 @@
+# ──────────────────────────────────────────────
+# AgroSmart Andino — .gitignore
+# ──────────────────────────────────────────────
+
+# Credenciales y configuración sensible
+.env
+*.pem
+*.key
+aws_credentials.json
+
+# Datos raw y procesados (no subir al repo)
+data/raw/
+data/processed/
+
+# Entornos virtuales Python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Streamlit cache
+.streamlit/
+
+# Archivos temporales y del sistema
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Outputs de notebooks
+*.html
+
+# PDFs generados por LaTeX (excluir auxiliares, no los finales)
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/*.synctex.gz
+docs/*.fls
+docs/*.fdb_latexmk
+
+# IDEs
+.vscode/
+.idea/
+*.swp

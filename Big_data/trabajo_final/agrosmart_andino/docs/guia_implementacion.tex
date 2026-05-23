@@ -1,0 +1,915 @@
+% ============================================================
+% AgroSmart Andino -- Guia de Implementacion Completa
+% Pasos 1 al 8: Local + AWS
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel}
+\usepackage[margin=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Paleta
+\definecolor{agroverde}{RGB}{27,67,50}
+\definecolor{agrolight}{RGB}{45,106,79}
+\definecolor{agroclear}{RGB}{184,233,199}
+\definecolor{agroazul}{RGB}{0,80,180}
+\definecolor{agrorojo}{RGB}{180,30,30}
+\definecolor{agronaranja}{RGB}{200,100,0}
+\definecolor{agrogris}{RGB}{90,90,90}
+\definecolor{codebg}{RGB}{245,245,245}
+
+% Titulos
+\titleformat{\section}
+  {\large\bfseries\color{agroverde}}
+  {\thesection.}{0.5em}{}
+  [\color{agroverde}\hrule]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{agroazul}}
+  {\thesubsection}{0.5em}{}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{agrogris} AgroSmart Andino -- Gu\'ia de Implementaci\'on}
+\fancyhead[R]{\small\color{agrogris} Maestr\'ia IA -- UNI -- Big Data 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Listings
+\lstset{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},
+  frame=single, framerule=0pt,
+  breaklines=true, showstringspaces=false,
+  keywordstyle=\color{agroazul}\bfseries,
+  commentstyle=\color{agrogris}\itshape,
+  stringstyle=\color{agrorojo},
+  numbers=none,
+  literate=
+    {\'a}{{\'{a}}}1 {\'e}{{\'{e}}}1 {\'i}{{\'{i}}}1
+    {\'o}{{\'{o}}}1 {\'u}{{\'{u}}}1 {\~n}{{\~{n}}}1
+    {\'A}{{\'{A}}}1 {\'E}{{\'{E}}}1 {\'I}{{\'{I}}}1
+    {\'O}{{\'{O}}}1 {\'U}{{\'{U}}}1
+}
+\lstdefinestyle{bash}{language=bash,
+  morekeywords={cd,python,streamlit,pip,conda,cqlsh,docker},
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{black!90},
+  basicstyle=\ttfamily\small\color{white},
+  keywordstyle=\color{yellow},
+  commentstyle=\color{gray},
+  frame=none,
+}
+\lstdefinestyle{python}{language=python,
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{codebg},
+  keywordstyle=\color{agroazul}\bfseries,
+  commentstyle=\color{agrogris}\itshape,
+  stringstyle=\color{agrorojo},
+}
+
+% Cajas de colores
+\tcbuselibrary{skins}
+
+\newtcolorbox{localbox}[1][Ejecuci\'on LOCAL]{
+  colback=agroazul!8, colframe=agroazul,
+  title=#1, fonttitle=\bfseries\color{white},
+  colbacktitle=agroazul, arc=4pt, boxrule=0.5pt,
+}
+\newtcolorbox{awsbox}[1][Ejecuci\'on AWS]{
+  colback=agronaranja!8, colframe=agronaranja!80!black,
+  title=#1, fonttitle=\bfseries\color{white},
+  colbacktitle=agronaranja!80!black, arc=4pt, boxrule=0.5pt,
+}
+\newtcolorbox{alertbox}[1][Importante]{
+  colback=agrorojo!8, colframe=agrorojo,
+  title=#1, fonttitle=\bfseries\color{white},
+  colbacktitle=agrorojo, arc=4pt, boxrule=0.5pt,
+}
+\newtcolorbox{okbox}[1][Resultado esperado]{
+  colback=agroclear!50, colframe=agrolight,
+  title=#1, fonttitle=\bfseries\color{white},
+  colbacktitle=agrolight, arc=4pt, boxrule=0.5pt,
+}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+  {\color{agroverde}\rule{\linewidth}{2pt}}\\[0.5em]
+  {\huge\bfseries\color{agroverde} AgroSmart Andino}\\[0.3em]
+  {\large\color{agroverde} Gu\'ia de Implementaci\'on Completa}\\[0.3em]
+  {\normalsize\color{agrogris} Pasos 1 al 8 --- Local y AWS paso a paso}\\[0.3em]
+  {\color{agroverde}\rule{\linewidth}{2pt}}
+
+  \vspace{1.5cm}
+  \begin{tcolorbox}[colback=agroverde!5, colframe=agroverde,
+    arc=6pt, boxrule=1pt]
+    \begin{center}
+      \textbf{Pipeline Big Data con Dashboard en Tiempo Real}\\[0.3em]
+      \normalsize
+      Monitoreo de Papa Nativa en Huangascar, Yauyos, Lima\\[0.5em]
+      \begin{tabular}{ll}
+        \textbf{Curso:} & Big Data\\
+        \textbf{Docente:} & Mg. Rosa Virginia Encinas Quille\\
+        \textbf{Universidad:} & Universidad Nacional de Ingenier\'ia (UNI)\\
+        \textbf{Programa:} & Maestr\'ia en Inteligencia Artificial\\
+        \textbf{Grupo:} & 2\\
+        \textbf{Integrantes:} & Montes E. $\cdot$ Vizcardo F. $\cdot$ Massa Q.
+                                $\cdot$ Huali C. $\cdot$ Lazaro G.\\
+        \textbf{Fecha:} & Mayo 2026\\
+      \end{tabular}
+    \end{center}
+  \end{tcolorbox}
+
+  \vspace{1.5cm}
+  \textbf{Resumen del sistema:}\\[0.4em]
+  \begin{tabular}{llll}
+    \toprule
+    Componente & Tecnolog\'ia & Registros & Estado \\
+    \midrule
+    Data Acquisition & Python 3.13 & 72\,397 & {\color{agrolight}\checkmark} \\
+    Data Lake & AWS S3 & 3 CSV & {\color{agrolight}\checkmark} \\
+    ETL + ML & Spark 3.4 / EMR & 3\,653 Gold & {\color{agrolight}\checkmark} \\
+    Indexaci\'on & 4 \'indices & 18/47/31 d\'ias & {\color{agrolight}\checkmark} \\
+    NoSQL & Cassandra 4.1 & 4\,459 dry-run & {\color{agrolight}\checkmark} \\
+    Dashboard & Streamlit 1.x & 11 KPIs & {\color{agrolight}\checkmark} \\
+    Informe PDF & LaTeX & 20 p\'aginas & {\color{agrolight}\checkmark} \\
+    Presentaci\'on & Beamer & 17 diapositivas & {\color{agrolight}\checkmark} \\
+    \bottomrule
+  \end{tabular}
+
+  \vfill
+  {\color{agrogris}\small Directorio base del proyecto:
+    \texttt{d:\textbackslash{}Documents\textbackslash{}GitHub\textbackslash{}Maestria\_IA\_caso\_practico\textbackslash{}Big\_data\textbackslash{}trabajo\_final\textbackslash{}agrosmart\_andino\textbackslash{}}}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Prerrequisitos e Instalaci\'on del Entorno}
+% ============================================================
+
+\subsection{Software necesario (instalaci\'on local Windows)}
+
+\begin{tabular}{lll}
+\toprule
+Software & Versi\'on probada & Instalaci\'on \\
+\midrule
+Python (Miniconda) & 3.13 & \href{https://docs.conda.io}{conda install} \\
+MiKTeX & 25.12 & \href{https://miktex.org}{miktex.org} (para PDF) \\
+AWS CLI & 2.x & \href{https://aws.amazon.com/cli/}{aws.amazon.com/cli} \\
+Docker Desktop & 24.x & Para Cassandra local (opcional) \\
+VS Code & cualquiera & Editor recomendado \\
+\bottomrule
+\end{tabular}
+
+\subsection{Instalar dependencias Python}
+
+\begin{localbox}[Instalar paquetes Python]
+\begin{lstlisting}[style=bash]
+# Desde la carpeta agrosmart_andino/
+conda activate base     # o el entorno de tu preferencia
+pip install -r requirements.txt
+\end{lstlisting}
+\end{localbox}
+
+Contenido de \texttt{requirements.txt}:
+\begin{lstlisting}[style=python]
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+boto3>=1.34
+python-dotenv>=1.0
+streamlit>=1.30
+plotly>=5.18
+cassandra-driver>=3.29
+pyspark>=3.4      # solo necesario si ejecutas localmente sin EMR
+\end{lstlisting}
+
+\subsection{Estructura de directorios}
+
+\begin{lstlisting}
+agrosmart_andino/
++-- data/
+|   +-- raw/           <- CSVs descargados (Parte 2)
+|   +-- gold/          <- CSVs procesados para dashboard (Parte 4+5)
++-- scripts/
+|   +-- data_acquisition/
+|   |   +-- 01_download_nasa_power.py
+|   |   +-- 02_generate_iot_data.py
+|   |   +-- 03_prepare_midagri_data.py
+|   |   +-- 04_validate_datasets.py
+|   +-- aws/
+|   |   +-- 05_upload_to_s3.py
+|   |   +-- 06_create_emr_cluster.py
+|   +-- cassandra/
+|       +-- 07_create_schema.cql
+|       +-- 08_load_data.py
+|       +-- 09_setup_cassandra_cloud9.sh
++-- notebooks/
+|   +-- agrosmart_pipeline.ipynb   <- Spark ETL + ML (38 celdas)
++-- dashboard/
+|   +-- app.py                     <- Streamlit dashboard
++-- docs/
+|   +-- informe_tecnico.tex/.pdf   <- Informe (20 pags)
+|   +-- presentacion.tex/.pdf      <- Diapositivas (17 slides)
+|   +-- compilar.bat
++-- .env                           <- Credenciales AWS (NO subir a git)
++-- .env.example
++-- requirements.txt
++-- README.md
+\end{lstlisting}
+
+% ============================================================
+\section{Parte 1 -- Estructura del Proyecto}
+% ============================================================
+
+\textbf{Objetivo:} Crear la estructura de carpetas y archivos de configuraci\'on base.
+
+\begin{localbox}[Crear la estructura de carpetas]
+\begin{lstlisting}[style=bash]
+# Crear directorios desde trabajo_final/
+mkdir -p agrosmart_andino/data/raw
+mkdir -p agrosmart_andino/data/gold
+mkdir -p agrosmart_andino/scripts/data_acquisition
+mkdir -p agrosmart_andino/scripts/aws
+mkdir -p agrosmart_andino/scripts/cassandra
+mkdir -p agrosmart_andino/notebooks
+mkdir -p agrosmart_andino/dashboard
+mkdir -p agrosmart_andino/docs
+\end{lstlisting}
+\end{localbox}
+
+\begin{localbox}[Configurar archivo .env]
+\begin{lstlisting}[style=bash]
+# Copiar plantilla y editar con tus credenciales AWS
+copy agrosmart_andino\.env.example agrosmart_andino\.env
+# Editar .env y completar:
+#   AWS_ACCESS_KEY_ID=ASIA...
+#   AWS_SECRET_ACCESS_KEY=...
+#   AWS_SESSION_TOKEN=...
+#   S3_BUCKET_NAME=agrosmart-andino-demo
+#   AWS_DEFAULT_REGION=us-east-1
+\end{lstlisting}
+\end{localbox}
+
+\begin{okbox}[Resultado Parte 1]
+Estructura de carpetas creada. Archivos: README.md, requirements.txt, .gitignore, .env.example.
+\end{okbox}
+
+% ============================================================
+\section{Parte 2 -- Adquisici\'on y Validaci\'on de Datos}
+% ============================================================
+
+\textbf{Objetivo:} Descargar y generar los 3 datasets fuente. Validar 72\,397 registros.
+
+\subsection{Script 01 -- Descarga NASA POWER API}
+
+\begin{localbox}[Ejecutar desde agrosmart\_andino/]
+\begin{lstlisting}[style=bash]
+cd agrosmart_andino
+python scripts/data_acquisition/01_download_nasa_power.py
+\end{lstlisting}
+\end{localbox}
+
+\textbf{Qu\'e hace:} Llama la API gratuita de NASA POWER
+(\texttt{https://power.larc.nasa.gov/api/temporal/daily/}) para 5 estaciones
+en Yauyos. Descarga 10 a\~nos de datos diarios (2015--2024).
+
+\begin{okbox}[Resultado esperado]
+\texttt{data/raw/nasa\_power\_yauyos.csv} --- 18\,265 filas, 1.6 MB\\
+5 estaciones: Huangascar, Yauyos, Carania, Tanta, Vilca
+\end{okbox}
+
+\begin{alertbox}[Si hay error de red]
+La API NASA POWER es gratuita y no requiere clave. Si hay timeout, ejecutar
+nuevamente. La URL base es:
+\texttt{https://power.larc.nasa.gov/api/temporal/daily/point}
+\end{alertbox}
+
+\subsection{Script 02 -- Generar datos IoT sint\'eticos}
+
+\begin{localbox}[]
+\begin{lstlisting}[style=bash]
+python scripts/data_acquisition/02_generate_iot_data.py
+\end{lstlisting}
+\end{localbox}
+
+\textbf{Qu\'e hace:} Genera datos horarios de 3 nodos IoT simulados para
+las coordenadas de Huangascar. Usa distribuciones calibradas con el clima
+real de la zona.
+
+\begin{okbox}[]
+\texttt{data/raw/sensores\_iot.csv} --- 52\,632 filas, 4.6 MB\\
+3 nodos: NODO-001 (3\,000m), NODO-002 (3\,200m), NODO-003 (3\,500m)
+\end{okbox}
+
+\subsection{Script 03 -- Preparar datos MIDAGRI}
+
+\begin{localbox}[]
+\begin{lstlisting}[style=bash]
+python scripts/data_acquisition/03_prepare_midagri_data.py
+\end{lstlisting}
+\end{localbox}
+
+\begin{okbox}[]
+\texttt{data/raw/produccion\_papa\_yauyos.csv} --- 1\,500 filas\\
+Producci\'on hist\'orica de papa nativa por distrito y variedad (2000--2024)
+\end{okbox}
+
+\subsection{Script 04 -- Validar los 3 datasets}
+
+\begin{localbox}[]
+\begin{lstlisting}[style=bash]
+python scripts/data_acquisition/04_validate_datasets.py
+\end{lstlisting}
+\end{localbox}
+
+\textbf{Qu\'e valida:} Existencia, filas m\'inimas, duplicados, nulos cr\'iticos,
+rangos de variables (temperatura, humedad, precipitaci\'on).
+
+\begin{okbox}[]
+\begin{lstlisting}
+[OK] nasa_power_yauyos.csv    -- 18,265 filas  -- VALIDO
+[OK] sensores_iot.csv         -- 52,632 filas  -- VALIDO
+[OK] produccion_papa_yauyos.csv -- 1,500 filas -- VALIDO
+Total: 72,397 registros validados
+\end{lstlisting}
+\end{okbox}
+
+% ============================================================
+\section{Parte 3 -- Data Lake en AWS S3}
+% ============================================================
+
+\textbf{Objetivo:} Subir los 3 CSVs validados a un bucket S3 como Data Lake.
+
+\subsection{Paso previo: Crear el bucket S3 en AWS Console}
+
+\begin{awsbox}[AWS Console -- Crear bucket S3]
+\begin{enumerate}
+  \item Iniciar sesi\'on en \href{https://awsacademy.instructure.com}{AWS Academy}
+  \item Abrir el Learner Lab $\to$ \textbf{[Start Lab]} $\to$ esperar indicador VERDE
+  \item Clic en \textbf{[AWS]} para abrir la consola
+  \item Buscar \textbf{S3} $\to$ \textbf{Create bucket}
+  \item Configurar:
+  \begin{itemize}
+    \item Bucket name: \texttt{agrosmart-andino-demo}
+    \item Region: \textbf{US East (N. Virginia) us-east-1}
+    \item Block Public Access: activado (dejar por defecto)
+    \item Versioning: Disabled
+  \end{itemize}
+  \item Clic \textbf{Create bucket}
+\end{enumerate}
+\end{awsbox}
+
+\subsection{Copiar credenciales al .env}
+
+\begin{awsbox}[AWS Academy -- Copiar credenciales]
+\begin{enumerate}
+  \item En Learner Lab $\to$ \textbf{AWS Details}
+  \item Copiar los 3 valores y pegarlos en \texttt{.env}:
+\end{enumerate}
+\begin{lstlisting}
+AWS_ACCESS_KEY_ID=ASIA...
+AWS_SECRET_ACCESS_KEY=...
+AWS_SESSION_TOKEN=IQoJ...  <- token largo, NO OMITIR
+S3_BUCKET_NAME=agrosmart-andino-demo
+AWS_DEFAULT_REGION=us-east-1
+\end{lstlisting}
+\end{awsbox}
+
+\begin{alertbox}[Las credenciales de AWS Academy expiran en 3 horas]
+Cada vez que reinicies el lab debes copiar nuevas credenciales. El
+\texttt{AWS\_SESSION\_TOKEN} es obligatorio; sin \'el la conexi\'on falla.
+\end{alertbox}
+
+\subsection{Ejecutar la subida}
+
+\begin{localbox}[Desde agrosmart\_andino/]
+\begin{lstlisting}[style=bash]
+python scripts/aws/05_upload_to_s3.py
+\end{lstlisting}
+\end{localbox}
+
+\begin{okbox}[]
+\begin{lstlisting}
+[OK] s3://agrosmart-andino-demo/raw/clima/nasa_power_yauyos.csv
+[OK] s3://agrosmart-andino-demo/raw/sensores/sensores_iot.csv
+[OK] s3://agrosmart-andino-demo/raw/produccion/produccion_papa_yauyos.csv
+Total almacenado: 6.3 MB
+\end{lstlisting}
+\end{okbox}
+
+% ============================================================
+\section{Parte 4 -- Pipeline ETL y ML con Apache Spark en EMR}
+% ============================================================
+
+\textbf{Objetivo:} Crear cl\'uster EMR, ejecutar el notebook PySpark con
+ETL + \'indices agroclim\'aticos + modelos ML.
+
+\subsection{Crear el cl\'uster EMR}
+
+\begin{awsbox}[Opci\'on A: Script autom\'atico]
+\begin{lstlisting}[style=bash]
+# Desde agrosmart_andino/ (necesita credenciales en .env)
+python scripts/aws/06_create_emr_cluster.py
+# Esperar ~8-10 minutos hasta estado WAITING
+\end{lstlisting}
+\end{awsbox}
+
+\begin{awsbox}[Opci\'on B: AWS Console manualmente]
+\begin{enumerate}
+  \item AWS Console $\to$ \textbf{EMR} $\to$ \textbf{Create cluster}
+  \item Configuraci\'on:
+  \begin{itemize}
+    \item Nombre: \texttt{AgroSmart-Cluster}
+    \item EMR release: \textbf{emr-6.15.0}
+    \item Applications: \textbf{Spark, JupyterHub}
+    \item Primary (master): \texttt{m5.xlarge}
+    \item Core: \texttt{m5.xlarge} (1 nodo)
+    \item Key pair: crear o usar existente
+  \end{itemize}
+  \item Clic \textbf{Create cluster} $\to$ esperar estado \textbf{Waiting}
+\end{enumerate}
+\end{awsbox}
+
+\subsection{Conectarse a JupyterHub y ejecutar el notebook}
+
+\begin{awsbox}[Acceder a JupyterHub en EMR]
+\begin{enumerate}
+  \item EMR Console $\to$ tu cl\'uster $\to$ pesta\~na \textbf{Applications}
+  \item Copiar la URL de JupyterHub (puerto 9443)
+  \item Abrir en navegador, usuario: \texttt{jovyan} / pass: \texttt{jupyter}
+  \item Subir el archivo \texttt{notebooks/agrosmart\_pipeline.ipynb}
+  \item Men\'u: \textbf{Kernel} $\to$ \textbf{PySpark} $\to$ ejecutar todas las celdas
+\end{enumerate}
+\end{awsbox}
+
+\subsection{Qu\'e hace el notebook (38 celdas)}
+
+\begin{tabular}{lll}
+\toprule
+Secci\'on & Celdas & Acci\'on \\
+\midrule
+Setup SparkSession & 1--3 & Inicializar Spark con S3 como storage \\
+Ingesta S3 Raw & 4--7 & Leer 3 CSV, revisar schema y nulos \\
+Limpieza ETL & 8--13 & Dedup, imputaci\'on, tipado, fechas \\
+Join e integraci\'on & 14--17 & Unir clima + IoT + producci\'on \\
+\'Indices agroclim\'aticos & 18--22 & Calcular IHB, ITT, IEH, ET$_0$ \\
+EDA & 23--26 & Estad\'isticas descriptivas, correlaci\'on \\
+RandomForest (ML) & 27--30 & Clasificaci\'on riesgo tiz\'on, AUC=0.87 \\
+GBT Regressor (ML) & 31--34 & Predicci\'on rendimiento, R$^2$=0.78 \\
+Exportar Gold & 35--38 & Escribir 4 CSV Gold a S3 Gold \\
+\bottomrule
+\end{tabular}
+
+\begin{okbox}[Archivos Gold generados en S3]
+\begin{lstlisting}
+s3://agrosmart-andino-demo/gold/lecturas_climaticas.csv     # 3,653 filas
+s3://agrosmart-andino-demo/gold/alertas_activas.csv         # 500 filas
+s3://agrosmart-andino-demo/gold/recomendaciones_riego.csv   # 300 filas
+s3://agrosmart-andino-demo/gold/predicciones_rendimiento.csv # 6 filas
+\end{lstlisting}
+\end{okbox}
+
+\begin{alertbox}[Descargar los CSV Gold para uso local]
+Despu\'es de ejecutar el notebook, descargar los 4 CSV Gold a
+\texttt{data/gold/} para poder usar el dashboard localmente sin EMR.
+Desde AWS Console $\to$ S3 $\to$ gold/ $\to$ Download.
+\end{alertbox}
+
+\subsection{Ejecuci\'on local (alternativa sin EMR)}
+
+\begin{localbox}[Si tienes PySpark instalado localmente]
+\begin{lstlisting}[style=bash]
+# Instalar PySpark
+pip install pyspark
+
+# Ejecutar el notebook localmente
+cd agrosmart_andino
+jupyter notebook notebooks/agrosmart_pipeline.ipynb
+# NOTA: cambiar la ruta de S3 por la ruta local data/raw/
+#   "s3://..." -> "data/raw/..."
+\end{lstlisting}
+\end{localbox}
+
+% ============================================================
+\section{Parte 5 -- Apache Cassandra (NoSQL)}
+% ============================================================
+
+\textbf{Objetivo:} Crear el esquema Cassandra y cargar los datos Gold.
+
+\subsection{Opci\'on A: Cassandra local con Docker}
+
+\begin{localbox}[Docker Desktop -- Instalar Cassandra 4.1]
+\begin{lstlisting}[style=bash]
+# Descargar imagen y ejecutar contenedor
+docker pull cassandra:4.1
+docker run --name cassandra-agrosmart \
+  -p 9042:9042 \
+  -e HEAP_NEWSIZE=128M \
+  -e MAX_HEAP_SIZE=512M \
+  -d cassandra:4.1
+
+# Esperar ~30 segundos a que arranque
+docker logs cassandra-agrosmart --tail 20
+# Debe aparecer: "Starting listening for CQL clients on /0.0.0.0:9042"
+\end{lstlisting}
+\end{localbox}
+
+\begin{localbox}[Crear el esquema CQL]
+\begin{lstlisting}[style=bash]
+# Copiar el schema al contenedor y ejecutar
+docker cp scripts/cassandra/07_create_schema.cql cassandra-agrosmart:/tmp/
+
+docker exec -it cassandra-agrosmart \
+  cqlsh -f /tmp/07_create_schema.cql
+
+# Verificar keyspace creado
+docker exec -it cassandra-agrosmart \
+  cqlsh -e "DESCRIBE KEYSPACES;"
+# Debe aparecer: agrosmart_andino
+\end{lstlisting}
+\end{localbox}
+
+\begin{localbox}[Cargar datos Gold en Cassandra]
+\begin{lstlisting}[style=bash]
+# Ejecutar desde agrosmart_andino/
+# Modo dry-run (sin conexion real, solo valida datos):
+python scripts/cassandra/08_load_data.py --dry-run
+
+# Modo real (requiere Cassandra corriendo en localhost:9042):
+python scripts/cassandra/08_load_data.py
+\end{lstlisting}
+\end{localbox}
+
+\begin{okbox}[]
+\begin{lstlisting}
+[DRY-RUN] lecturas_climaticas  : 3,653 filas
+[DRY-RUN] alertas_activas       : 500   filas
+[DRY-RUN] recomendaciones_riego : 300   filas
+[DRY-RUN] predicciones_rendimiento: 6   filas
+Total: 4,459 filas procesadas en 0.1s (79,917 filas/seg)
+\end{lstlisting}
+\end{okbox}
+
+\subsection{Opci\'on B: Cassandra en AWS Cloud9}
+
+\begin{awsbox}[AWS Cloud9 -- Instalar Docker + Cassandra]
+\begin{lstlisting}[style=bash]
+# 1. Crear entorno Cloud9 en AWS Console
+#    Tipo: EC2 t3.medium, Amazon Linux 2023
+
+# 2. En la terminal de Cloud9, ejecutar el script:
+bash scripts/cassandra/09_setup_cassandra_cloud9.sh
+
+# El script automaticamente:
+#   - Instala Docker
+#   - Descarga cassandra:4.1
+#   - Ejecuta el contenedor
+#   - Crea el keyspace agrosmart_andino
+#   - Crea las 5 tablas
+\end{lstlisting}
+\end{awsbox}
+
+\begin{alertbox}[Compatibilidad Python 3.13 con cassandra-driver]
+En Python 3.13 el m\'odulo \texttt{asyncore} fue eliminado. El script
+\texttt{08\_load\_data.py} ya incluye el fix:
+\begin{lstlisting}[style=python]
+from cassandra.io.asyncioreactor import AsyncioConnection
+cluster = Cluster(
+    ['localhost'],
+    connection_class=AsyncioConnection
+)
+\end{lstlisting}
+No cambiar esto; es obligatorio para Python 3.13.
+\end{alertbox}
+
+\subsection{Estructura de tablas Cassandra}
+
+\begin{tabular}{lll}
+\toprule
+Tabla & Partition Key & TTL \\
+\midrule
+\texttt{lecturas\_climaticas\_por\_dia} & (estacion, fecha DESC) & Sin TTL \\
+\texttt{alertas\_activas} & (nodo\_id, fecha DESC) & 90 d\'ias \\
+\texttt{recomendaciones\_riego} & (nodo\_id, fecha DESC) & 90 d\'ias \\
+\texttt{predicciones\_rendimiento} & (anio, variedad) & Sin TTL \\
+\texttt{estado\_nodos} & (nodo\_id) & Sin TTL \\
+\bottomrule
+\end{tabular}
+
+% ============================================================
+\section{Parte 6 -- Dashboard Streamlit}
+% ============================================================
+
+\textbf{Objetivo:} Ejecutar el dashboard interactivo de monitoreo en tiempo real.
+
+\subsection{Prerrequisitos}
+
+Antes de ejecutar el dashboard, verificar que existan los 4 CSV Gold en
+\texttt{data/gold/}:
+
+\begin{lstlisting}
+data/gold/
++-- lecturas_climaticas.csv         (3,653 filas)
++-- alertas_activas.csv             (500 filas)
++-- recomendaciones_riego.csv       (300 filas)
++-- predicciones_rendimiento.csv    (6 filas)
+\end{lstlisting}
+
+Si no existen, copiarlos desde S3 o ejecutar las Partes 2--4 primero.
+
+\subsection{Ejecutar el dashboard}
+
+\begin{localbox}[IMPORTANTE: ejecutar DESDE la carpeta agrosmart\_andino/]
+\begin{lstlisting}[style=bash]
+# Navegar a la carpeta correcta
+cd d:\Documents\GitHub\Maestria_IA_caso_practico\Big_data\trabajo_final\agrosmart_andino
+
+# Ejecutar Streamlit
+streamlit run dashboard/app.py --server.port 8501
+\end{lstlisting}
+\end{localbox}
+
+\begin{alertbox}[Error frecuente: File does not exist: dashboard\textbackslash{}app.py]
+\textbf{Causa:} El comando se ejecuta desde la carpeta equivocada.\\
+\textbf{Soluci\'on:} Siempre ejecutar desde \texttt{agrosmart\_andino/}, no desde
+\texttt{trabajo\_final/}.
+\begin{lstlisting}[style=bash]
+# INCORRECTO (desde trabajo_final/):
+streamlit run dashboard/app.py
+
+# CORRECTO (desde agrosmart_andino/):
+cd agrosmart_andino
+streamlit run dashboard/app.py --server.port 8501
+\end{lstlisting}
+\end{alertbox}
+
+\begin{okbox}[Dashboard corriendo]
+\begin{lstlisting}
+  You can now view your Streamlit app in your browser.
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.x.x:8501
+\end{lstlisting}
+Abrir \href{http://localhost:8501}{http://localhost:8501} en el navegador.
+\end{okbox}
+
+\subsection{Componentes del dashboard (11 KPIs)}
+
+\begin{tabular}{llp{6cm}}
+\toprule
+\# & Componente & Descripci\'on \\
+\midrule
+1 & Sem\'aforo HTML & Verde/Naranja/Rojo seg\'un nivel de alerta \\
+2 & KPI Nivel alerta & Texto coloreado con el estado del nodo \\
+3 & KPI Humedad suelo & Porcentaje medio del nodo seleccionado \\
+4 & KPI Recomendaci\'on & Texto de acci\'on de riego \\
+5 & Tabla alertas & \'Ultimas 10 alertas por nodo \\
+6 & M\'etricas 7 valores & T$_{\text{med}}$, T$_{\min}$, ET$_0$, d\'eficit, horas riego, etc. \\
+7 & Temperatura 7 d\'ias & L\'inea m\'ax/med/m\'in con zona de helada \\
+8 & Precipitaci\'on 30 d & Barras diarias \\
+9 & Humedad suelo & L\'inea por nodo con bandas de estr\'es \\
+10 & Heatmap ITT & Matriz sem$\times$d\'ia verde a rojo \\
+11 & Gauge + barras GBT & Predicci\'on rendimiento 2025 por variedad \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\textbf{Controles del sidebar:}
+\begin{itemize}
+  \item Selector de nodo: NODO-001 / NODO-002 / NODO-003
+  \item Slider historial: 7 a 90 d\'ias
+  \item Bot\'on \textit{Recargar datos}: fuerza recarga de CSV
+  \item Refresco autom\'atico cada 5 minutos (\texttt{@st.cache\_data(ttl=300)})
+\end{itemize}
+
+% ============================================================
+\section{Parte 7 -- Informe T\'ecnico en LaTeX}
+% ============================================================
+
+\textbf{Objetivo:} Compilar el informe t\'ecnico PDF de 20 p\'aginas.
+
+\begin{localbox}[Compilar el informe (dos pasadas)]
+\begin{lstlisting}[style=bash]
+cd agrosmart_andino\docs
+
+# Primera pasada (genera estructura)
+pdflatex -interaction=nonstopmode informe_tecnico.tex
+
+# Segunda pasada (resuelve referencias cruzadas e indice)
+pdflatex -interaction=nonstopmode informe_tecnico.tex
+
+# O usar el script batch incluido:
+compilar.bat
+\end{lstlisting}
+\end{localbox}
+
+\begin{alertbox}[Warning "Incompatible glue units" (x4)]
+Este warning proviene de \texttt{tcolorbox} + \texttt{babel/spanish}. Es inofensivo;
+el PDF se genera correctamente (20 p\'aginas). No es un error que impida la
+compilaci\'on.
+\end{alertbox}
+
+\begin{okbox}[]
+\texttt{docs/informe\_tecnico.pdf} --- 20 p\'aginas, $\approx$491 KB\\
+Secciones: Portada, Resumen, 12 secciones t\'ecnicas, Referencias, Anexos A/B/C
+\end{okbox}
+
+% ============================================================
+\section{Parte 8 -- Presentaci\'on Beamer}
+% ============================================================
+
+\textbf{Objetivo:} Compilar las diapositivas Beamer PDF de 17 slides.
+
+\begin{localbox}[Compilar la presentaci\'on]
+\begin{lstlisting}[style=bash]
+cd agrosmart_andino\docs
+
+# Dos pasadas para resolver el indice de diapositivas
+pdflatex -interaction=nonstopmode presentacion.tex
+pdflatex -interaction=nonstopmode presentacion.tex
+\end{lstlisting}
+\end{localbox}
+
+\begin{okbox}[]
+\texttt{docs/presentacion.pdf} --- 17 diapositivas, $\approx$495 KB\\
+Duraci\'on estimada: 15 minutos + 5 minutos Q\&A
+\end{okbox}
+
+\subsection{Estructura de la presentaci\'on (guion 15 min)}
+
+\begin{tabular}{clcp{5.5cm}}
+\toprule
+Slide & Secci\'on & Min & Puntos clave \\
+\midrule
+1 & Portada & 0:00 & T\'itulo, integrantes, docente \\
+2 & \'Indice & 0:30 & Navegaci\'on de la presentaci\'on \\
+3 & Problema & 1:30 & 3 riesgos, p\'erdida 38\%, oportunidad \\
+4 & Objetivos & 3:00 & General + 5 espec\'ificos con m\'etricas \\
+5 & Arquitectura & 4:30 & Flujo 5 capas, tabla tecnolog\'ias \\
+6 & Datos & 6:00 & 72\,397 registros, 3 fuentes, validaci\'on \\
+7 & ETL Spark & 7:30 & 3 fases, config EMR, tabla resultados \\
+8 & \'Indices & 8:30 & F\'ormulas IHB/ITT/IEH/ET$_0$ \\
+9 & ML & 10:00 & RF AUC=0.87, GBT R$^2$=0.78 \\
+10 & Predicciones & 11:00 & 6 variedades, 9.2 t/ha 2025 \\
+11 & Cassandra & 12:00 & 5 tablas, dry-run, design patterns \\
+12 & Dashboard & 13:00 & 11 KPIs, ejecuci\'on, sem\'afor \\
+13 & Sem\'aforos & 13:30 & Mock 3 nodos verde/naranja/rojo \\
+14 & Resultados & 14:00 & Tabla global de m\'etricas \\
+15 & Contribuciones & 14:30 & 4 aportes + limitaciones \\
+16 & Conclusiones & 15:30 & 6 conclusiones enumeradas \\
+17 & Cierre Q\&A & 16:00 & Gracias + preguntas \\
+\bottomrule
+\end{tabular}
+
+% ============================================================
+\section{Resumen: Comandos de Ejecuci\'on Completa}
+% ============================================================
+
+A continuaci\'on, el orden completo de ejecuci\'on para reproducir
+todo el proyecto desde cero:
+
+\begin{lstlisting}[style=bash]
+# == PASO 0: Instalar dependencias ==========================
+cd agrosmart_andino
+pip install -r requirements.txt
+
+# == PASO 1: Adquirir datos (Parte 2) =======================
+python scripts/data_acquisition/01_download_nasa_power.py
+python scripts/data_acquisition/02_generate_iot_data.py
+python scripts/data_acquisition/03_prepare_midagri_data.py
+python scripts/data_acquisition/04_validate_datasets.py
+
+# == PASO 2: Subir a S3 (Parte 3) -- requiere AWS activo ====
+# Copiar credenciales de AWS Academy en .env
+python scripts/aws/05_upload_to_s3.py
+
+# == PASO 3: ETL + ML en EMR (Parte 4) ======================
+# Crear cluster EMR:
+python scripts/aws/06_create_emr_cluster.py
+# Abrir JupyterHub y ejecutar:
+# notebooks/agrosmart_pipeline.ipynb
+# Descargar 4 CSV Gold a data/gold/
+
+# == PASO 4: Cassandra (Parte 5) ============================
+docker run --name cassandra-agrosmart -p 9042:9042 \
+  -e MAX_HEAP_SIZE=512M -d cassandra:4.1
+# esperar 30 segundos...
+docker cp scripts/cassandra/07_create_schema.cql cassandra-agrosmart:/tmp/
+docker exec -it cassandra-agrosmart cqlsh -f /tmp/07_create_schema.cql
+python scripts/cassandra/08_load_data.py --dry-run   # validar
+python scripts/cassandra/08_load_data.py              # cargar real
+
+# == PASO 5: Dashboard (Parte 6) ===========================
+# IMPORTANTE: ejecutar desde agrosmart_andino/, no desde trabajo_final/
+cd agrosmart_andino
+streamlit run dashboard/app.py --server.port 8501
+# Abrir: http://localhost:8501
+
+# == PASO 6: Compilar documentacion (Partes 7 y 8) ==========
+cd docs
+pdflatex -interaction=nonstopmode informe_tecnico.tex
+pdflatex -interaction=nonstopmode informe_tecnico.tex
+pdflatex -interaction=nonstopmode presentacion.tex
+pdflatex -interaction=nonstopmode presentacion.tex
+\end{lstlisting}
+
+% ============================================================
+\section{Soluci\'on de Problemas Frecuentes}
+% ============================================================
+
+\begin{tabular}{p{4.5cm}p{5cm}p{4.5cm}}
+\toprule
+\textbf{Error} & \textbf{Causa} & \textbf{Soluci\'on} \\
+\midrule
+\texttt{File does not exist: dashboard\textbackslash{}app.py} &
+Ejecutar desde carpeta incorrecta &
+\texttt{cd agrosmart\_andino} antes de streamlit \\
+\midrule
+\texttt{NoCredentialsError} &
+\texttt{.env} vac\'io o no encontrado &
+Copiar credenciales de AWS Academy Details \\
+\midrule
+\texttt{asyncore} not found &
+Python 3.13 elimin\'o asyncore &
+Ya corregido: usar \texttt{AsyncioConnection} \\
+\midrule
+\texttt{applymap} deprecated &
+Pandas $\ge$ 2.1 ren. \texttt{applymap} &
+Ya corregido: usar \texttt{.style.map()} \\
+\midrule
+Incompatible glue units (LaTeX) &
+tcolorbox + babel/spanish &
+Es un warning inofensivo, el PDF se genera \\
+\midrule
+EMR cluster en estado \texttt{TERMINATED} &
+Sesi\'on AWS de 3h expir\'o &
+Reiniciar lab y crear nuevo cluster \\
+\midrule
+Cassandra: \texttt{Connection refused} &
+Docker no iniciado &
+\texttt{docker start cassandra-agrosmart} \\
+\midrule
+NASA POWER: timeout &
+API lenta o red &
+Ejecutar nuevamente (es gratuita, sin clave) \\
+\bottomrule
+\end{tabular}
+
+% ============================================================
+\section{Entregables Finales}
+% ============================================================
+
+\begin{tabular}{lll}
+\toprule
+Archivo & Descripci\'on & Tama\~no \\
+\midrule
+\texttt{docs/informe\_tecnico.pdf} & Informe t\'ecnico completo & 20 p\'ag., 491 KB \\
+\texttt{docs/presentacion.pdf} & Diapositivas Beamer & 17 slides, 495 KB \\
+\texttt{dashboard/app.py} & C\'odigo fuente dashboard & Streamlit \\
+\texttt{notebooks/agrosmart\_pipeline.ipynb} & Notebook Spark EMR & 38 celdas \\
+\texttt{data/gold/*.csv} & Datasets procesados & 4 archivos \\
+\texttt{scripts/} & Todos los scripts (01--09) & 9 archivos \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{tcolorbox}[colback=agroclear!40, colframe=agrolight,
+  title=M\'etricas clave para mencionar en la presentaci\'on,
+  fonttitle=\bfseries\color{white}, colbacktitle=agrolight]
+\begin{multicols}{2}
+\begin{itemize}
+  \item 72\,397 registros, 3 fuentes
+  \item 3\,653 registros Gold integrados
+  \item AUC-ROC = \textbf{0.87} (RandomForest)
+  \item R$^2$ = \textbf{0.78} (GBT Regressor)
+  \item 9.2 t/ha predicci\'on 2025
+  \item 18 d\'ias helada / 47 tiz\'on / 31 h\'idrico
+  \item 4\,459 filas Cassandra en 0.1 s
+  \item $<$3 min ETL en EMR 6.15
+  \item 11 componentes Streamlit
+  \item $<$\$50/mes costo AWS estimado
+\end{itemize}
+\end{multicols}
+\end{tcolorbox}
+
+\end{document}

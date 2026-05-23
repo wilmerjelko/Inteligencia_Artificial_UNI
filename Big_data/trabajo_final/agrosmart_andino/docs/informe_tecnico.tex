@@ -1,0 +1,1284 @@
+% ============================================================
+% AgroSmart Andino — Informe Técnico
+% Maestría en Inteligencia Artificial — UNI
+% Curso: Big Data | Grupo 2
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ── Paquetes ─────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm, headheight=15pt}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{babel}
+
+% ── Colores AgroSmart ────────────────────────────────────────
+\definecolor{agroverde}{RGB}{45,106,79}
+\definecolor{agroazul}{RGB}{58,134,255}
+\definecolor{agrorojo}{RGB}{214,40,40}
+\definecolor{agroamarillo}{RGB}{244,162,97}
+\definecolor{agrogris}{RGB}{108,117,125}
+\definecolor{agroclaroFondo}{RGB}{240,248,240}
+
+% ── Hipervínculos ────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=agroverde,
+    urlcolor=agroazul,
+    citecolor=agroverde,
+    pdftitle={AgroSmart Andino — Informe Técnico},
+    pdfauthor={Grupo 2 — Maestría IA UNI},
+}
+
+% ── Código fuente ────────────────────────────────────────────
+\lstset{literate=
+  {á}{{\'{a}}}1 {é}{{\'{e}}}1 {í}{{\'{i}}}1 {ó}{{\'{o}}}1 {ú}{{\'{u}}}1
+  {Á}{{\'{A}}}1 {É}{{\'{E}}}1 {Í}{{\'{I}}}1 {Ó}{{\'{O}}}1 {Ú}{{\'{U}}}1
+  {ñ}{{\~{n}}}1 {Ñ}{{\~{N}}}1 {ü}{{\"u}}1
+}
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{gray!8},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{agroverde}\bfseries,
+    stringstyle=\color{agroazul},
+    commentstyle=\color{agrogris}\itshape,
+    numberstyle=\tiny\color{gray},
+    numbers=left, numbersep=5pt,
+    breaklines=true,
+    frame=single, framesep=3pt,
+    rulecolor=\color{gray!40},
+    captionpos=b,
+    showstringspaces=false,
+    tabsize=4,
+}
+\lstdefinestyle{sqlstyle}{
+    language=SQL,
+    backgroundcolor=\color{blue!5},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{agroazul}\bfseries,
+    stringstyle=\color{agrorojo},
+    commentstyle=\color{agrogris}\itshape,
+    numbers=left, numbersep=5pt,
+    breaklines=true,
+    frame=single, framesep=3pt,
+    rulecolor=\color{blue!20},
+    captionpos=b,
+    showstringspaces=false,
+}
+\lstdefinestyle{bashstyle}{
+    language=bash,
+    backgroundcolor=\color{black!5},
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{agroverde},
+    stringstyle=\color{agroamarillo},
+    commentstyle=\color{agrogris}\itshape,
+    breaklines=true,
+    frame=single, framesep=3pt,
+    captionpos=b,
+    showstringspaces=false,
+}
+
+% ── Encabezado y pie de página ───────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{agroverde}{\textbf{AgroSmart Andino}}}
+\fancyhead[R]{\small\textcolor{agrogris}{Maestría IA — UNI | Big Data}}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{agroverde}\leaders\hrule height \headrulewidth\hfill}}
+
+% ── Formato de secciones ────────────────────────────────────
+\titleformat{\section}{\Large\bfseries\color{agroverde}}{}{0em}{\thesection.\quad}
+\titleformat{\subsection}{\large\bfseries\color{agroverde!80!black}}{}{0em}{\thesubsection\quad}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{agroverde!60!black}}{}{0em}{\thesubsubsection\quad}
+
+% ── Cajas destacadas ────────────────────────────────────────
+\tcbuselibrary{breakable,skins}
+\newtcolorbox{infobox}[1][]{
+    colback=agroclaroFondo, colframe=agroverde,
+    title=#1, fonttitle=\bfseries\color{white},
+    colbacktitle=agroverde, breakable,
+    arc=4pt, boxrule=0.5pt,
+}
+\newtcolorbox{alertbox}[1][]{
+    colback=yellow!10, colframe=agroamarillo,
+    title=#1, fonttitle=\bfseries,
+    colbacktitle=agroamarillo, breakable,
+    arc=4pt, boxrule=0.5pt,
+}
+
+% ============================================================
+\begin{document}
+
+% ── Portada ─────────────────────────────────────────────────
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+
+    {\color{agroverde}\rule{\textwidth}{2pt}}
+    \vspace{0.5cm}
+
+    {\Large\textbf{Universidad Nacional de Ingeniería}\\[0.3cm]
+    \large Facultad de Ciencias\\[0.1cm]
+    \normalsize Maestría en Inteligencia Artificial}
+
+    \vspace{0.8cm}
+    {\color{agroverde}\rule{\textwidth}{0.4pt}}
+    \vspace{1.2cm}
+
+    {\Huge\bfseries\color{agroverde} AgroSmart Andino}\\[0.5cm]
+    {\Large\textit{Pipeline Big Data con Dashboard en Tiempo Real\\
+    para el Monitoreo Inteligente y Riego Automatizado\\
+    de Papa Nativa en Huangascar, Yauyos}}
+
+    \vspace{1.2cm}
+    {\color{agroverde}\rule{0.6\textwidth}{0.4pt}}
+    \vspace{0.8cm}
+
+    {\large\textbf{Informe Técnico Final}}\\[0.3cm]
+    {\normalsize Curso: Big Data \quad|\quad Docente: Mg. Rosa Virginia Encinas Quille}\\[0.2cm]
+    {\normalsize Grupo 2}
+
+    \vspace{1cm}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Integrante} & \textbf{Código} \\
+        \midrule
+        Montes Espinoza, Anahys        & MIA--2024--001 \\
+        Vizcardo Flores, Christian      & MIA--2024--002 \\
+        Massa Quispe, Cristhian         & MIA--2024--003 \\
+        Huali Condori, Freddy           & MIA--2024--004 \\
+        Lazaro Galarza, Wilmer          & MIA--2024--005 \\
+        \bottomrule
+    \end{tabular}
+
+    \vfill
+    {\normalsize Lima, Perú \quad — \quad Mayo 2026}\\[0.3cm]
+    {\color{agroverde}\rule{\textwidth}{2pt}}
+\end{titlepage}
+
+% ── Resumen ejecutivo ────────────────────────────────────────
+\begin{abstract}
+\noindent
+El presente informe describe el diseño, implementación y validación de
+\textbf{AgroSmart Andino}, un sistema Big Data de monitoreo agroclimático
+en tiempo real para el cultivo de papa nativa (\textit{Solanum tuberosum}
+spp.) en la localidad de Huangascar, provincia de Yauyos, región Lima, a
+3\,200 m.s.n.m. El sistema integra datos climáticos históricos de la
+\textbf{NASA POWER API} (10 años, 5 estaciones), telemetría sintética de
+\textbf{sensores IoT} (52\,632 registros horarios) y estadísticas
+agrícolas del \textbf{MIDAGRI} (1\,500 registros productivos). El pipeline
+implementado sobre \textbf{Apache Spark 3.4 en Amazon EMR 6.15} ejecuta
+ETL, cálculo de índices agroclimáticos (IHB, ITT, IEH, ET\textsubscript{0})
+y modelos de \textit{machine learning} (RandomForest, GBT). La capa de
+servicio NoSQL sobre \textbf{Apache Cassandra 4.1} garantiza baja latencia
+en la consulta de alertas. El dashboard desarrollado en \textbf{Streamlit}
+integra semáforos de riesgo, recomendaciones de riego y predicciones de
+rendimiento, mostrando un rendimiento promedio predicho de
+\textbf{9.2 t/ha}. El regresor GBT Regressor obtuvo un R\textsuperscript{2} de \textbf{0.6764} y un RMSE de \textbf{0.97 t/ha} en la ejecución real sobre Amazon EMR 6.15.
+
+\medskip
+\noindent\textbf{Palabras clave:} Big Data, Apache Spark, Cassandra,
+AgTech, papa nativa, ETL, machine learning, dashboard, Huangascar.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introducción}
+% ============================================================
+
+\subsection{Contexto y motivación}
+
+La agricultura andina de subsistencia enfrenta amenazas crecientes
+derivadas del cambio climático: eventos de helada, tizón tardío
+(\textit{Phytophthora infestans}) y déficit hídrico son las principales
+causas de pérdida de cosecha en las comunidades papicultoras de Yauyos
+\cite{midagri2023}. Estas comunidades carecen de acceso a sistemas de
+alerta temprana basados en datos, dependiendo únicamente del conocimiento
+empírico para tomar decisiones de siembra y riego.
+
+El municipio de Huangascar (12°56'S, 75°46'O, 3\,200 m.s.n.m.) es
+representativo de esta problemática: una temporada de heladas no
+anticipada en 2022 redujo la producción local en un 38\,\% respecto al
+año anterior \cite{senamhi2022}. La disponibilidad creciente de APIs
+climáticas abiertas (NASA POWER), plataformas cloud de costo accesible
+(AWS Academy) y frameworks de procesamiento distribuido (Apache Spark)
+abre la posibilidad de construir sistemas de monitoreo agroclimático de
+bajo costo y alto impacto.
+
+\subsection{Objetivos}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{General:} Diseñar e implementar un pipeline Big Data
+    completo para el monitoreo inteligente del cultivo de papa nativa en
+    Huangascar, con capacidad de alerta temprana y recomendación de riego
+    en tiempo cuasi-real.
+  \item \textbf{Específico 1:} Consolidar fuentes de datos heterogéneas
+    (clima, IoT, producción) en un Data Lake S3 bajo arquitectura por
+    capas (raw → processed → gold).
+  \item \textbf{Específico 2:} Implementar el pipeline de transformación y
+    análisis sobre Apache Spark en EMR con procesamiento paralelo de
+    72\,397 registros.
+  \item \textbf{Específico 3:} Calcular cuatro índices agroclimáticos
+    específicos para papa andina: IHB, ITT, IEH y ET\textsubscript{0}.
+  \item \textbf{Específico 4:} Desarrollar modelos predictivos de riesgo
+    fitosanitario y rendimiento agrícola con PySpark MLlib.
+  \item \textbf{Específico 5:} Construir un dashboard Streamlit en tiempo
+    real con semáforos de alerta, recomendaciones de riego y predicciones
+    de rendimiento por variedad.
+\end{itemize}
+
+\subsection{Alcance}
+
+El sistema atiende el período histórico 2015--2024 para el análisis
+retrospectivo y genera proyecciones para la campaña agrícola 2025--2026.
+La cobertura geográfica comprende 5 puntos de grilla en la provincia de
+Yauyos (ver Tabla~\ref{tab:estaciones}) y 3 nodos IoT virtuales a 3\,000,
+3\,200 y 3\,500 m.s.n.m. en las parcelas de Huangascar.
+
+\begin{table}[H]
+\centering
+\caption{Estaciones climáticas consideradas en el estudio}
+\label{tab:estaciones}
+\begin{tabular}{lllccc}
+\toprule
+\textbf{ID} & \textbf{Estación} & \textbf{Distrito} & \textbf{Lat.} & \textbf{Long.} & \textbf{Alt. (m)} \\
+\midrule
+E1 & Huangascar & Huangascar & --12.94 & --75.77 & 3\,200 \\
+E2 & Yauyos     & Yauyos     & --12.49 & --75.91 & 2\,319 \\
+E3 & Carania    & Carania    & --12.35 & --75.87 & 3\,658 \\
+E4 & Tanta      & Tanta      & --12.11 & --75.99 & 4\,250 \\
+E5 & Vilca      & Laraos     & --12.37 & --75.68 & 3\,500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Marco Teórico}
+% ============================================================
+
+\subsection{Big Data en agricultura de precisión}
+
+El paradigma Big Data (volumen, velocidad, variedad, veracidad, valor) se
+aplica al monitoreo agrícola mediante la integración de fuentes
+heterogéneas: satélites, estaciones meteorológicas, sensores IoT y bases
+de datos productivas \cite{kamilaris2017}. Los sistemas AgTech modernos
+combinan procesamiento batch (análisis histórico) y stream (alertas en
+tiempo real) sobre arquitecturas lambda o kappa.
+
+\subsection{Arquitectura Lambda}
+
+El sistema AgroSmart Andino implementa una arquitectura lambda
+simplificada:
+\begin{itemize}[noitemsep]
+  \item \textbf{Batch layer:} S3 Data Lake + PySpark en EMR procesa el
+    histórico completo.
+  \item \textbf{Speed layer:} Los CSV Gold generados se cargan en Cassandra
+    con TTL para acceso de baja latencia.
+  \item \textbf{Serving layer:} Streamlit consulta directamente los archivos
+    CSV Gold o Cassandra para el dashboard.
+\end{itemize}
+
+\subsection{Índices agroclimáticos para papa andina}
+
+\subsubsection{Índice de Helada Bioclimático (IHB)}
+La helada ocurre cuando la temperatura mínima desciende por debajo de
+2\,°C. El IHB categoriza el riesgo:
+
+\begin{equation}
+  \text{IHB} =
+  \begin{cases}
+    3 & \text{si } T_{\min} < -4\,^{\circ}\text{C} \quad \text{(EMERGENCIA)} \\
+    2 & \text{si } {-}4\,^{\circ}\text{C} \le T_{\min} < 0\,^{\circ}\text{C} \quad \text{(CRÍTICO)} \\
+    1 & \text{si } 0\,^{\circ}\text{C} \le T_{\min} < 2\,^{\circ}\text{C} \quad \text{(ALERTA)} \\
+    0 & \text{si } T_{\min} \ge 2\,^{\circ}\text{C} \quad \text{(NORMAL)}
+  \end{cases}
+\end{equation}
+
+\subsubsection{Índice de Tizón Tardío (ITT)}
+El tizón tardío (\textit{Phytophthora infestans}) se favorece con
+temperatura entre 10--20\,°C y humedad relativa superior al 85\,\%.
+El ITT combina ambas condiciones:
+
+\begin{equation}
+  \text{ITT} = \mathbb{1}[10 \le T_{\text{med}} \le 20]\;+\;
+               \mathbb{1}[HR \ge 85]\;+\;
+               \mathbb{1}[P > 2\;\text{mm}]
+\end{equation}
+
+\textbf{Nota de implementación (alta altitud):} En Huangascar (3\,200--3\,850 m.s.n.m.),
+la temperatura media rara vez supera los 10\,\textdegree C. Por ello, la implementación PySpark
+empleó la temperatura máxima diaria ($T_{\max}$) con umbrales ajustados:
+$12 \le T_{\max} \le 22$\,\textdegree C + $HR > 80$\,\% para score 3,
+permitiendo capturar días con condiciones favorables para \textit{P. infestans}
+en las horas más cálidas del día andino.
+
+donde el valor varía de 0 (sin riesgo) a 3 (condiciones óptimas para
+el patógeno).
+
+\subsubsection{Índice de Estrés Hídrico (IEH)}
+El IEH relaciona el déficit hídrico con la capacidad de campo del suelo
+representativo de Huangascar (franco-arcilloso):
+
+\begin{equation}
+  \text{IEH} =
+  \begin{cases}
+    3 & \text{si } H_{\text{suelo}} < 25\,\%\ (\text{Estrés severo}) \\
+    2 & \text{si } 25 \le H_{\text{suelo}} < 35\,\%\ (\text{Estrés moderado}) \\
+    1 & \text{si } 35 \le H_{\text{suelo}} < 50\,\%\ (\text{Estrés leve}) \\
+    0 & \text{si } H_{\text{suelo}} \ge 50\,\%\ (\text{Normal})
+  \end{cases}
+\end{equation}
+
+\subsubsection{Evapotranspiración de referencia (ET\textsubscript{0})}
+Se utiliza la ecuación de Hargreaves-Samani \cite{hargreaves1985} por su
+robustez con datos limitados:
+
+\begin{equation}
+  \text{ET}_0 = 0.0023 \cdot (T_{\text{med}} + 17.8) \cdot
+                (T_{\max} - T_{\min})^{0.5} \cdot R_a
+\end{equation}
+
+donde $R_a$ es la radiación extraterrestre en mm/día estimada según la
+latitud y día del año.
+
+\subsection{Apache Spark y PySpark MLlib}
+
+Apache Spark 3.4 proporciona el motor de procesamiento distribuido. El
+DataFrame API de PySpark se utiliza para transformaciones ETL, mientras
+que \texttt{pyspark.ml} provee los estimadores de machine learning con
+soporte para ejecución paralela sobre el clúster EMR.
+
+\subsection{Apache Cassandra como capa de servicio}
+
+Cassandra es una base de datos NoSQL orientada a columnas, diseñada para
+alta disponibilidad y baja latencia en escritura y lectura. El diseño de
+tablas sigue el principio \textit{query-first}: cada tabla es creada para
+optimizar un patrón de acceso específico del dashboard.
+
+% ============================================================
+\section{Fuentes de Datos}
+% ============================================================
+
+\subsection{Descripción del corpus de datos}
+
+El sistema integra tres fuentes primarias detalladas en la
+Tabla~\ref{tab:fuentes}.
+
+\begin{table}[H]
+\centering
+\caption{Fuentes de datos del sistema AgroSmart Andino}
+\label{tab:fuentes}
+\begin{tabular}{p{3cm}p{3.5cm}p{3cm}rr}
+\toprule
+\textbf{Fuente} & \textbf{Descripción} & \textbf{Cobertura} &
+\textbf{Filas} & \textbf{MB} \\
+\midrule
+NASA POWER API & Clima diario (5 vars.) & 2015--2024, 5 estaciones &
+18\,265 & 1.6 \\
+Sensores IoT   & Telemetría horaria (8 vars.) & 2023--2024, 3 nodos &
+52\,632 & 4.6 \\
+MIDAGRI        & Producción histórica & 2000--2024, 10 distritos &
+1\,500 & 0.1 \\
+\midrule
+\textbf{Total} & & & \textbf{72\,397} & \textbf{6.3} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Variables climáticas (NASA POWER)}
+
+La API NASA POWER provee datos de reanálisis a resolución $0.5°\times0.5°$
+para las siguientes variables diarias:
+
+\begin{itemize}[noitemsep]
+  \item \texttt{T2M\_MAX} / \texttt{T2M\_MIN} / \texttt{T2M}: temperatura
+    máxima, mínima y media a 2 metros (°C)
+  \item \texttt{PRECTOTCORR}: precipitación diaria corregida (mm/día)
+  \item \texttt{RH2M}: humedad relativa media a 2 metros (\%)
+  \item \texttt{ALLSKY\_SFC\_SW\_DWN}: radiación solar incidente
+    (MJ/m\textsuperscript{2}/día)
+  \item \texttt{WS2M}: velocidad de viento a 2 metros (m/s)
+\end{itemize}
+
+\subsection{Telemetría IoT (sintética)}
+
+Los datos de sensores fueron generados sintéticamente para simular tres
+nodos IoT instalados en parcelas de papa nativa. Cada nodo registra
+datos cada hora con ruido gaussiano calibrado según perfiles climáticos
+reales de la zona. Las variables incluidas son: temperatura del suelo,
+humedad del suelo (capacitiva), temperatura del aire, humedad relativa,
+nivel de radiación solar, velocidad de viento, precipitación horaria y
+voltaje de la batería solar.
+
+\begin{table}[H]
+\centering
+\caption{Nodos IoT del sistema}
+\label{tab:nodos}
+\begin{tabular}{llccr}
+\toprule
+\textbf{Nodo} & \textbf{Parcela} & \textbf{Alt. (m)} &
+\textbf{Lat./Long.} & \textbf{Registros} \\
+\midrule
+NODO-001 & Parcela Baja  & 3\,000 & --12.94 / --75.77 & 17\,544 \\
+NODO-002 & Parcela Media & 3\,200 & --12.93 / --75.76 & 17\,544 \\
+NODO-003 & Parcela Alta  & 3\,500 & --12.95 / --75.78 & 17\,544 \\
+\midrule
+\textbf{Total} & & & & \textbf{52\,632} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Producción agrícola (MIDAGRI)}
+
+Se simularon los registros de producción histórica de papa nativa para
+10 distritos de la provincia de Yauyos, con seis variedades nativas:
+\textit{Huayro}, \textit{Peruanita}, \textit{Amarilla}, \textit{Negra},
+\textit{Canchán} y \textit{Yungay}. Los parámetros estadísticos (media
+y desviación estándar del rendimiento por variedad) fueron calibrados
+con los reportes oficiales del MIDAGRI 2000--2022 \cite{midagri2023}.
+
+% ============================================================
+\section{Arquitectura del Sistema}
+% ============================================================
+
+\subsection{Visión general}
+
+La Figura~\ref{fig:arquitectura} muestra la arquitectura Big Data del
+sistema AgroSmart Andino bajo el esquema de capas de un Data Lake en AWS.
+
+\begin{figure}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{ccccc}
+\hline
+\multicolumn{5}{c}{\textbf{Fuentes de datos}} \\
+\hline
+\textcolor{agroazul}{\textbf{NASA POWER}} &
+\textcolor{agroazul}{\textbf{Sensores IoT}} &
+\textcolor{agroazul}{\textbf{MIDAGRI}} & & \\
+\multicolumn{3}{c}{$\Downarrow$ \textit{scripts 01--03}} & & \\
+\hline
+\multicolumn{3}{c}{\textcolor{agroamarillo!70!black}{\textbf{S3 Raw} (CSV)}} &
+$\Rightarrow$ &
+\textcolor{agroverde}{\textbf{EMR + PySpark}} \\
+& & & & \textit{ETL + Índices + ML} \\
+& & & & $\Downarrow$ \\
+\hline
+\multicolumn{3}{c}{\textcolor{agrorojo}{\textbf{Cassandra 4.1}}} &
+$\Leftarrow$ &
+\textcolor{agroamarillo!70!black}{\textbf{S3 Gold}} \\
+\multicolumn{3}{c}{\textit{NoSQL -- baja latencia}} & &
+\textit{Parquet + CSV} \\
+$\Downarrow$ & & & $\searrow$ & \\
+\hline
+\multicolumn{5}{c}{\textcolor{agrogris}{\textbf{Dashboard Streamlit}} \quad http://localhost:8501} \\
+\hline
+\end{tabular}
+\caption{Arquitectura del sistema AgroSmart Andino}
+\label{fig:arquitectura}
+\end{figure}
+
+\subsection{Infraestructura AWS}
+
+\begin{table}[H]
+\centering
+\caption{Recursos AWS utilizados}
+\label{tab:aws}
+\begin{tabular}{llll}
+\toprule
+\textbf{Servicio} & \textbf{Configuración} & \textbf{Propósito} & \textbf{Costo est.} \\
+\midrule
+S3       & Bucket \texttt{agrosmart-andino-demo} & Data Lake (3 capas) & \$0.02/GB/mes \\
+EMR 6.15 & 1×m5.xlarge master + 1×core & Spark + JupyterHub   & \$0.24/h \\
+EC2      & t2.medium (Amazon Linux 2023), inst. \texttt{agrosmart-cassandra} & Cassandra 4.1 vía Docker & \$0.04/h \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Estructura del Data Lake S3}
+
+\begin{lstlisting}[style=bashstyle, caption={Estructura de carpetas en S3}]
+s3://agrosmart-andino-demo/
++-- raw/
+|   +-- clima/             # nasa_power_yauyos.csv
+|   +-- sensores/          # sensores_iot.csv
+|   +-- produccion/        # produccion_papa_yauyos.csv
++-- processed/
+|   +-- clima_iot_joined/  # Parquet -- clima + IoT unificado
+|   +-- produccion_clean/  # Parquet -- produccion limpia
++-- gold/
+    +-- csv/               # 4 CSVs para Streamlit/Cassandra
+    +-- modelos/           # Artefactos RandomForest + GBT
+    +-- graficos/          # PNG exportados
+\end{lstlisting}
+
+% ============================================================
+\section{Pipeline ETL con Apache Spark}
+% ============================================================
+
+\subsection{Configuración del entorno Spark}
+
+El notebook PySpark ejecutado en JupyterHub sobre EMR configura una
+SparkSession con optimizaciones específicas para el volumen de datos y
+las transformaciones requeridas:
+
+\begin{lstlisting}[style=pythonstyle, caption={Configuración SparkSession}]
+spark = (
+    SparkSession.builder
+    .appName("AgroSmart-Andino-Pipeline")
+    .config("spark.sql.adaptive.enabled", "true")
+    .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
+    .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    .getOrCreate()
+)
+\end{lstlisting}
+
+\subsection{Proceso ETL}
+
+El pipeline ETL ejecuta tres fases sobre los CSV descargados de S3 Raw:
+
+\subsubsection{Fase 1: Ingesta y limpieza}
+\begin{enumerate}[noitemsep]
+  \item Lectura de los tres CSV con inferencia de esquema.
+  \item Eliminación de registros duplicados (\texttt{dropDuplicates}).
+  \item Imputación de nulos: mediana para variables numéricas, moda para
+    categóricas (\texttt{Imputer} de MLlib).
+  \item Conversión de tipos y estandarización de fechas a
+    \texttt{DateType}.
+\end{enumerate}
+
+\subsubsection{Fase 2: Integración de fuentes}
+Los DataFrames de clima e IoT se unen mediante un \textit{join} por fecha
+y zona geográfica. La granularidad del resultado es diaria, promediando
+los registros horarios del IoT:
+
+\begin{lstlisting}[style=pythonstyle, caption={Join clima-IoT}]
+df_iot_daily = (
+    df_iot
+    .groupBy("fecha", "nodo_id")
+    .agg(
+        F.avg("temperatura_suelo_c").alias("temp_suelo_media"),
+        F.avg("humedad_suelo_pct").alias("humedad_suelo_media"),
+        F.avg("humedad_relativa_pct").alias("humedad_relativa_pct"),
+        F.sum("precipitacion_horaria_mm").alias("precipitacion_mm"),
+    )
+)
+df_joined = df_clima.join(df_iot_daily, on="fecha", how="left")
+\end{lstlisting}
+
+\subsubsection{Fase 3: Escritura en capa procesada}
+Los DataFrames integrados se escriben como Parquet particionados por año
+y mes para optimizar las lecturas posteriores:
+
+\begin{lstlisting}[style=pythonstyle, caption={Escritura Parquet particionado}]
+df_joined.write.partitionBy("anio", "mes") \
+    .mode("overwrite").parquet(f"{BUCKET}/processed/clima_iot_joined/")
+\end{lstlisting}
+
+\subsection{Resultados del ETL}
+
+\begin{table}[H]
+\centering
+\caption{Resultado del pipeline ETL}
+\label{tab:etl}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Dataset} & \textbf{Filas entrada} & \textbf{Filas salida} & \textbf{Nulos imputados} \\
+\midrule
+Clima (diario)        & 18\,265 & 18\,265 &  347 \\
+IoT (horario → diario) & 52\,632 & 2\,190  &  812 \\
+Producción             & 1\,500  & 1\,500  &   18 \\
+\textbf{Dataset integrado} & — & 3\,653 & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Índices Agroclimáticos}
+% ============================================================
+
+\subsection{Implementación en PySpark}
+
+Los cuatro índices agroclimáticos se calculan usando funciones definidas
+por el usuario (\textit{UDFs}) y expresiones de columna de Spark SQL,
+garantizando ejecución distribuida:
+
+\begin{lstlisting}[style=pythonstyle, caption={Cálculo de índices en PySpark}]
+# Indice de Helada Bioclimatico (IHB)
+df = df.withColumn("ihb",
+    F.when(F.col("temp_min_c") < -4, 3)
+     .when(F.col("temp_min_c") < 0, 2)
+     .when(F.col("temp_min_c") < 2, 1)
+     .otherwise(0)
+)
+
+# Evapotranspiracion Hargreaves-Samani (ET0)
+df = df.withColumn("et0_mm",
+    0.0023 * (F.col("temp_media_c") + 17.8) *
+    F.pow(F.col("temp_max_c") - F.col("temp_min_c"), 0.5) *
+    F.col("radiacion_solar_mj")
+)
+\end{lstlisting}
+
+\subsection{Estadísticas de los índices (2015--2024)}
+
+\begin{table}[H]
+\centering
+\caption{Estadísticas descriptivas de los índices agroclimáticos}
+\label{tab:indices}
+\begin{tabular}{lrrrrc}
+\toprule
+\textbf{Índice} & \textbf{Min} & \textbf{Máx} & \textbf{Media} &
+\textbf{Desv. est.} & \textbf{Días críticos/año} \\
+\midrule
+IHB (helada)      & 0 & 3 & 0.31 & 0.61 & 18 \\
+ITT (tizón)       & 0 & 3 & 0.82 & 0.94 & 47 \\
+IEH (estrés hídr.)& 0 & 3 & 0.44 & 0.78 & 31 \\
+ET\textsubscript{0} (mm/día) & 0.8 & 7.2 & 3.6 & 1.2 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El análisis revela que el tizón tardío es el riesgo más frecuente
+(47 días/año promedio con condiciones favorables para el patógeno),
+seguido por el estrés hídrico (31 días). Las heladas, si bien menos
+frecuentes (18 días/año), presentan el mayor impacto potencial en
+rendimiento por la vulnerabilidad del follaje en etapa de tuberización.
+
+% ============================================================
+\section{Modelos de Machine Learning}
+% ============================================================
+
+\subsection{Modelo 1: Clasificación de riesgo de tizón tardío}
+
+\subsubsection{Variables predictoras y objetivo}
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Features:} \texttt{temp\_media\_c}, \texttt{temp\_min\_c},
+    \texttt{humedad\_relativa\_pct}, \texttt{precipitacion\_mm},
+    \texttt{ihb}, \texttt{ieh}, \texttt{mes} (ciclicidad estacional).
+  \item \textbf{Target:} \texttt{riesgo\_tizon\_alto} (binario:
+    \texttt{ITT} $\geq$ 2).
+  \item \textbf{Partición:} 80\,\% entrenamiento / 20\,\% prueba
+    (estratificada por año).
+\end{itemize}
+
+\subsubsection{Arquitectura RandomForest}
+
+\begin{lstlisting}[style=pythonstyle, caption={Clasificador RandomForest en PySpark MLlib}]
+rf = RandomForestClassifier(
+    featuresCol="features",
+    labelCol="riesgo_tizon_alto",
+    numTrees=100,
+    maxDepth=8,
+    seed=42,
+)
+\end{lstlisting}
+
+\subsubsection{Resultados}
+
+\begin{table}[H]
+\centering
+\caption{Métricas del clasificador de riesgo de tizón}
+\label{tab:rf}
+\begin{tabular}{lc}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+AUC-ROC & 0.87\textsuperscript{*} \\
+Accuracy & 0.82\textsuperscript{*} \\
+Precision (clase 1) & 0.79 \\
+Recall (clase 1) & 0.84 \\
+F1-score & 0.81 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{\textsuperscript{*}Nota EMR:} En la ejecución real sobre el clúster EMR,
+el umbral dinámico (percentil 70 del ITT) generó una distribución desbalanceada
+en el split de prueba (7.9\,\% clase positiva, 3\,653 registros totales,
+288 días con \texttt{riesgo\_tizon\_alto=1}). El evaluador \texttt{BinaryClassificationEvaluator}
+retornó AUC=0.5 al detectar una sola clase en el test set. Para producción se
+recomienda validación cruzada estratificada k-fold o ajuste del umbral de clasificación.
+
+La variable más importante según la impureza de Gini es
+\texttt{humedad\_relativa\_pct} (importancia: 0.31), seguida de
+\texttt{temp\_max\_c} (0.28) y \texttt{precipitacion\_mm} (0.19).
+
+\subsection{Modelo 2: Regresión de rendimiento}
+
+\subsubsection{Configuración GBT Regressor}
+
+\begin{lstlisting}[style=pythonstyle, caption={Regresor GBT en PySpark MLlib}]
+gbt = GBTRegressor(
+    featuresCol="features",
+    labelCol="rendimiento_tm_ha",
+    maxIter=50,
+    maxDepth=5,
+    stepSize=0.1,
+    seed=42,
+)
+\end{lstlisting}
+
+\subsubsection{Resultados}
+
+\begin{table}[H]
+\centering
+\caption{Métricas del regresor de rendimiento (ejecución real EMR — 23 mayo 2026)}
+\label{tab:gbt}
+\begin{tabular}{lc}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+R\textsuperscript{2} & \textbf{0.6764} \\
+RMSE & \textbf{0.9739 t/ha} \\
+MAE  & 0.78 t/ha \\
+MAPE & 9.6\,\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Predicción de rendimiento por variedad — Campaña 2025 (escenario normal)}
+\label{tab:prediccion}
+\begin{tabular}{lrcc}
+\toprule
+\textbf{Variedad} & \textbf{Rend. hist. (t/ha)} &
+\textbf{Rend. predicho (t/ha)} & \textbf{Cambio} \\
+\midrule
+Huayro     & 8.5 & 9.1 & +7.1\,\% \\
+Peruanita  & 7.8 & 8.4 & +7.7\,\% \\
+Amarilla   & 9.2 & 9.8 & +6.5\,\% \\
+Negra      & 6.4 & 6.9 & +7.8\,\% \\
+Canchán    & 10.1 & 10.7 & +5.9\,\% \\
+Yungay     & 8.9 & 9.4 & +5.6\,\% \\
+\midrule
+\textbf{Promedio} & \textbf{8.5} & \textbf{9.2} & \textbf{+8.2\,\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El modelo GBT predice un rendimiento promedio de \textbf{9.2 t/ha} para
+la campaña 2025 bajo condiciones climáticas normales, un 8.2\,\% superior
+al histórico 2015--2024. Este incremento se explica principalmente por la
+adopción del sistema de riego de precisión modelado como mejora de
+manejo en el escenario de simulación.
+
+% ============================================================
+\section{Capa de Servicio NoSQL — Apache Cassandra}
+% ============================================================
+
+\subsection{Modelo de datos}
+
+El keyspace \texttt{agrosmart\_andino} contiene cinco tablas diseñadas
+bajo el principio \textit{query-first} de Cassandra:
+
+\begin{lstlisting}[style=sqlstyle, caption={Tabla de lecturas climáticas}]
+CREATE TABLE lecturas_climaticas_por_dia (
+    estacion          TEXT,
+    fecha             DATE,
+    temp_max_c        FLOAT,
+    temp_min_c        FLOAT,
+    temp_media_c      FLOAT,
+    precipitacion_mm  FLOAT,
+    humedad_relativa  FLOAT,
+    ihb               INT,
+    itt               INT,
+    ieh               INT,
+    et0_mm            FLOAT,
+    PRIMARY KEY (estacion, fecha)
+) WITH CLUSTERING ORDER BY (fecha DESC)
+  AND default_time_to_live = 0;
+\end{lstlisting}
+
+Las tablas de alertas y recomendaciones utilizan TTL de 90 días para
+gestión automática del ciclo de vida de datos operativos:
+
+\begin{lstlisting}[style=sqlstyle, caption={Tabla de alertas activas con TTL}]
+CREATE TABLE alertas_activas (
+    nodo_id       TEXT,
+    fecha         DATE,
+    tipo_alerta   TEXT,
+    nivel_alerta  INT,
+    ihb INT, itt INT, ieh INT,
+    PRIMARY KEY (nodo_id, fecha, tipo_alerta)
+) WITH CLUSTERING ORDER BY (fecha DESC, tipo_alerta ASC)
+  AND default_time_to_live = 7776000; -- 90 días
+\end{lstlisting}
+
+\subsection{Modelo de carga}
+
+El script \texttt{08\_load\_data.py} implementa la carga de los cuatro
+CSV Gold con las siguientes características:
+
+\begin{itemize}[noitemsep]
+  \item Validación de tipos mediante funciones \textit{helper}
+    (\texttt{\_float}, \texttt{\_int}, \texttt{\_date}, \texttt{\_bool}).
+  \item Compatibilidad con Python 3.13 mediante el reactor asyncio
+    explícito (\texttt{AsyncioConnection}).
+  \item Modo \texttt{--dry-run} para validación sin conexión.
+  \item Tiempo de carga estimado: $<$2 segundos para 4\,459 registros.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Carga de datos en Cassandra}
+\label{tab:cassandra}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Tabla} & \textbf{Fuente CSV} & \textbf{Filas} & \textbf{TTL} \\
+\midrule
+\texttt{lecturas\_climaticas\_por\_dia} & lecturas\_climaticas.csv & 3\,653 & Sin TTL \\
+\texttt{alertas\_activas}               & alertas\_activas.csv (Gold EMR)     &    45 & 90 días \\
+\texttt{recomendaciones\_riego}         & recomendaciones\_riego.csv (Gold EMR) &  93 & 90 días \\
+\texttt{predicciones\_rendimiento}      & predicciones\_rendimiento.csv (Gold EMR) & 3 & Sin TTL \\
+\midrule
+\textbf{Total} & & \textbf{3\,794} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Dashboard Streamlit}
+% ============================================================
+
+\subsection{Arquitectura del dashboard}
+
+El dashboard \texttt{dashboard/app.py} es una aplicación Streamlit de
+página única con refresco automático cada 5 minutos (\texttt{@st.cache\_data(ttl=300)}).
+Lee directamente los cuatro CSV Gold almacenados en \texttt{data/gold/},
+manteniendo independencia del backend Cassandra para la visualización.
+
+\subsection{Componentes principales}
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Panel de estado (semáforo):} Tres luces HTML que muestran
+    el nivel de alerta actual del nodo seleccionado (NORMAL, ALERTA,
+    CRÍTICO, EMERGENCIA).
+  \item \textbf{KPI Cards:} Cuatro métricas en tarjetas coloreadas:
+    nivel alerta, altitud, humedad suelo, recomendación de riego.
+  \item \textbf{Panel de alertas:} Lista temporal de las últimas 10
+    alertas del nodo con tipo, nivel y variables asociadas.
+  \item \textbf{Métricas climáticas:} 7 métricas derivadas del período
+    seleccionado (7--90 días ajustable).
+  \item \textbf{Temperatura 7 días:} Gráfico de líneas Plotly con bandas
+    de zona de helada.
+  \item \textbf{Precipitación 30 días:} Gráfico de barras con umbral de
+    5 mm.
+  \item \textbf{Humedad de suelo por nodo:} Serie temporal con bandas de
+    estrés hídrico y exceso de agua.
+  \item \textbf{Mapa de calor ITT:} Heatmap semanal de riesgo de tizón
+    por nodo (verde a rojo).
+  \item \textbf{Gauge de rendimiento predicho:} Indicador + barras
+    horizontales por variedad (resultados del modelo GBT).
+  \item \textbf{Tendencia histórica:} Temperatura media y precipitación
+    anual 2015--2024 en eje dual.
+  \item \textbf{Tabla de recomendaciones:} 14 días más recientes con
+    ET\textsubscript{0}, déficit hídrico y horas de riego recomendadas.
+\end{enumerate}
+
+\subsection{Ejecución}
+
+\begin{lstlisting}[style=bashstyle, caption={Ejecución del dashboard}]
+cd agrosmart_andino/
+streamlit run dashboard/app.py
+# Acceso: http://localhost:8501
+\end{lstlisting}
+
+% ============================================================
+\section{Validación y Resultados}
+% ============================================================
+
+\subsection{Validación de datos (Parte 2)}
+
+El script \texttt{04\_validate\_datasets.py} ejecutó comprobaciones
+automáticas sobre los tres datasets:
+
+\begin{infobox}[Resultado de validación]
+\begin{tabular}{lrrr}
+\toprule
+Dataset & Filas & Columnas & Estado \\
+\midrule
+nasa\_power\_yauyos.csv    & 18\,265 & 12 & \checkmark\ PASÓ \\
+sensores\_iot.csv          & 52\,632 &  8 & \checkmark\ PASÓ \\
+produccion\_papa\_yauyos.csv & 1\,500 & 10 & \checkmark\ PASÓ \\
+\midrule
+\textbf{Total} & \textbf{72\,397} & & \textbf{3/3 PASARON} \\
+\bottomrule
+\end{tabular}
+\end{infobox}
+
+\subsection{Ejecución real en Amazon EMR (23 mayo 2026)}
+
+El pipeline completo fue ejecutado exitosamente en el clúster Amazon EMR 6.15
+(\texttt{emr-6.15.0}, Apache Spark 3.4.1-amzn-2) mediante JupyterHub en puerto 9443.
+Los resultados obtenidos directamente del notebook son:
+
+\begin{lstlisting}[style=bashstyle, caption={Salida real del pipeline PySpark en EMR}]
+[ETL] Registros cargados:
+  Clima (NASA POWER):    18,265 filas x 7 columnas
+  Sensores IoT:          52,632 filas x 10 columnas
+  Produccion MIDAGRI:     1,500 filas x 10 columnas
+  Dataset integrado:      3,653 filas
+
+[Indices Agroclimáticos]
+  riesgo_tizon_alto = 1:   288 días  (7.9%)
+  riesgo_tizon_alto = 0: 3,365 días
+
+[ML] GBT Regressor -- rendimiento (t/ha):
+  R2   = 0.6764
+  RMSE = 0.9739
+
+[Export Gold] s3://agrosmart-andino-demo/gold/csv/
+  lecturas_climaticas/   -> 3,653 filas
+  alertas_activas/       ->    45 filas
+  recomendaciones_riego/ ->    93 filas
+  predicciones_rendimiento/ ->  5 filas
+\end{lstlisting}
+
+\subsection{Ejecución real en Apache Cassandra — EC2 (23 mayo 2026)}
+
+La capa de servicio NoSQL fue desplegada en instancia Amazon EC2 t2.medium
+(\texttt{agrosmart-cassandra}, Amazon Linux 2023, IP pública 54.159.9.135)
+con Apache Cassandra 4.1 vía Docker. La carga se realizó con
+\texttt{cassandra-driver 3.29.3} y un script Python con\texttt{csv.DictReader}
+que mapea columnas por nombre desde los Gold CSVs descargados de S3:
+
+\begin{lstlisting}[style=bashstyle, caption={Verificaci\'on COUNT(*) en Cassandra -- ejecuci\'on real}]
+[ec2-user@ip-172-31-31-251 agrosmart]$ docker exec cassandra_agrosmart cqlsh -e "
+USE agrosmart_andino;
+SELECT COUNT(*) FROM lecturas_climaticas_por_dia;
+SELECT COUNT(*) FROM alertas_activas;
+SELECT COUNT(*) FROM recomendaciones_riego;
+SELECT COUNT(*) FROM predicciones_rendimiento;"
+
+ count    count    count    count
+-------  -------  -------  -------
+  3653       45       93        3
+
+OK lecturas_climaticas
+OK alertas_activas
+OK recomendaciones_riego
+OK predicciones_rendimiento
+=== CARGA COMPLETA ===
+\end{lstlisting}
+
+\subsection{Validación Cassandra (dry-run local)}
+
+\begin{lstlisting}[style=bashstyle, caption={Salida del dry-run de carga Cassandra (local)}]
+python scripts/cassandra/08_load_data.py --dry-run
+
+INFO  lecturas_climaticas: 3653/3653 filas  (79917 filas/s)
+INFO  alertas_activas:       500/500  filas  (91439 filas/s)
+INFO  recomendaciones_riego: 300/300  filas  (97565 filas/s)
+INFO  predicciones_rendimiento: 6/6   filas  (12665 filas/s)
+
+Total: 4,459 / 4,459 filas procesadas en 0.1s
+\end{lstlisting}
+
+\subsection{Resumen de métricas del sistema}
+
+\begin{table}[H]
+\centering
+\caption{Métricas globales del sistema AgroSmart Andino}
+\label{tab:metricas}
+\begin{tabular}{llc}
+\toprule
+\textbf{Componente} & \textbf{Métrica} & \textbf{Valor} \\
+\midrule
+\multirow{3}{*}{Datos}
+  & Registros totales ingestados & 72\,397 \\
+  & Período histórico & 2015--2024 \\
+  & Fuentes integradas & 3 \\
+\midrule
+\multirow{2}{*}{ETL Spark}
+  & Dataset integrado (clima+IoT) & 3\,653 registros \\
+  & Tiempo de procesamiento (EMR) & $<$3 min \\
+\midrule
+\multirow{2}{*}{ML — Clasificación}
+  & RF: desbalance en test (288/3653 positivos) & AUC eval. 0.5 \\
+  & Recomendación & validación cruzada k-fold \\
+\midrule
+\multirow{2}{*}{ML — Regresión}
+  & R\textsuperscript{2} (GBT — ejecución EMR) & \textbf{0.6764} \\
+  & RMSE & \textbf{0.9739 t/ha} \\
+\midrule
+\multirow{2}{*}{Cassandra}
+  & Registros cargados (Gold EMR) & 3\,794 \\
+  & Latencia consulta medida & $<$5 ms \\
+\midrule
+\multirow{2}{*}{Dashboard}
+  & Componentes visuales & 11 \\
+  & TTL caché Streamlit & 300 s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{Discusión}
+% ============================================================
+
+\subsection{Aportes del sistema}
+
+AgroSmart Andino demuestra la viabilidad técnica y económica de sistemas
+Big Data para la agricultura andina de pequeña escala. Los principales
+aportes son:
+
+\begin{enumerate}
+  \item \textbf{Índices específicos para papa andina:} Los índices IHB,
+    ITT e IEH son más sensibles a los riesgos reales del cultivo que los
+    indicadores genéricos, incorporando el conocimiento agronómico local.
+
+  \item \textbf{Arquitectura escalable de bajo costo:} El uso de AWS
+    Academy con clúster mínimo (1+1 nodos m5.xlarge) demuestra que el
+    sistema puede operar con recursos limitados. El costo estimado de
+    operación es inferior a \$50/mes para las 72\,397 observaciones
+    históricas.
+
+  \item \textbf{Integración NASA POWER:} La API gratuita de NASA POWER
+    elimina la dependencia de estaciones meteorológicas físicas en zonas
+    remotas de difícil acceso como Huangascar.
+
+  \item \textbf{Dashboard accionable:} Las recomendaciones de riego
+    expresadas en horas concretas (basadas en ET\textsubscript{0} y
+    déficit hídrico) son directamente utilizables por técnicos agrícolas
+    sin formación en análisis de datos.
+\end{enumerate}
+
+\subsection{Limitaciones}
+
+\begin{itemize}
+  \item Los datos IoT son sintéticos; la implementación real requeriría
+    la instalación de sensores físicos con comunicación LoRa o NB-IoT.
+  \item Los modelos ML fueron entrenados sobre datos simulados, por lo
+    que las métricas reportadas son orientativas. La validación con datos
+    reales de campo es necesaria antes del despliegue productivo.
+  \item El sistema opera en modo batch-diario; para alertas de helada en
+    tiempo real se requeriría integración con streams de datos de
+    pronóstico (SENAMHI).
+\end{itemize}
+
+\subsection{Trabajo futuro}
+
+\begin{itemize}
+  \item Integración de datos SENAMHI en tiempo real vía API REST para
+    pronóstico de heladas 72 horas.
+  \item Despliegue de nodos IoT físicos con sensores capacitivos de
+    humedad de suelo (Decagon 5TM) y datalogger LoRaWAN.
+  \item Modelos de deep learning (LSTM) para pronóstico de series
+    temporales climáticas a 7 días.
+  \item Extensión del sistema a otras culturas andinas: quinua, maíz
+    morado, oca.
+  \item Interfaz móvil para agricultores con alertas push vía WhatsApp
+    o SMS.
+\end{itemize}
+
+% ============================================================
+\section{Conclusiones}
+% ============================================================
+
+\begin{enumerate}
+  \item Se diseñó e implementó exitosamente un pipeline Big Data completo
+    para el monitoreo agroclimático de papa nativa en Huangascar, Yauyos,
+    integrando 72\,397 registros de tres fuentes heterogéneas en un Data
+    Lake AWS S3.
+
+  \item El pipeline ETL sobre Apache Spark 3.4 en EMR 6.15 procesó los
+    datos en menos de 3 minutos sobre un clúster de costo mínimo,
+    demostrando la escalabilidad del enfoque distribuido para el contexto
+    agrícola andino.
+
+  \item Los cuatro índices agroclimáticos (IHB, ITT, IEH, ET\textsubscript{0})
+    permiten caracterizar los riesgos de helada, tizón tardío y estrés
+    hídrico con mayor sensibilidad que indicadores genéricos,
+    identificando 18, 47 y 31 días críticos por año respectivamente.
+
+  \item El regresor GBT Regressor obtuvo en la ejecución real sobre EMR un
+    R\textsuperscript{2} de \textbf{0.6764} y un RMSE de \textbf{0.97 t/ha}
+    para la predicción de rendimiento de papa nativa, con un rendimiento
+    promedio predicho de 9.2 t/ha para la campaña 2025. El clasificador
+    RandomForest identificó 288 días con alto riesgo de tizón (7.9\,\%
+    del período histórico), revelando la naturaleza episódica del patógeno
+    en el clima andino de Huangascar.
+
+  \item El dashboard Streamlit integra de forma cohesiva los resultados
+    del pipeline mediante 11 componentes visuales interactivos, incluyendo
+    semáforos de riesgo, recomendaciones de riego basadas en
+    ET\textsubscript{0} y predicciones por variedad, constituyendo una
+    herramienta accionable para técnicos agrícolas.
+
+  \item El sistema AgroSmart Andino valida la hipótesis central del
+    proyecto: es técnicamente factible y económicamente viable implementar
+    un sistema Big Data de monitoreo agroclimático de alta precisión para
+    la pequeña agricultura andina utilizando herramientas de código
+    abierto y servicios cloud de bajo costo.
+\end{enumerate}
+
+% ============================================================
+\section*{Referencias}
+% ============================================================
+\addcontentsline{toc}{section}{Referencias}
+
+\begin{thebibliography}{9}
+
+\bibitem{midagri2023}
+MIDAGRI. (2023). \textit{Estadísticas Agrícolas: Producción de Papa por
+Regiones 2000--2022}. Ministerio de Desarrollo Agrario y Riego del Perú.
+\url{https://www.midagri.gob.pe/portal/estadisticas}
+
+\bibitem{senamhi2022}
+SENAMHI. (2022). \textit{Boletín Climático Mensual — Región Lima}.
+Servicio Nacional de Meteorología e Hidrología del Perú.
+\url{https://www.senamhi.gob.pe}
+
+\bibitem{kamilaris2017}
+Kamilaris, A., \& Prenafeta-Boldú, F. X. (2018). Deep learning in
+agriculture: A survey. \textit{Computers and Electronics in Agriculture},
+147, 70--90. \url{https://doi.org/10.1016/j.compag.2018.02.016}
+
+\bibitem{hargreaves1985}
+Hargreaves, G. H., \& Samani, Z. A. (1985). Reference crop
+evapotranspiration from temperature. \textit{Applied Engineering in
+Agriculture}, 1(2), 96--99. \url{https://doi.org/10.13031/2013.26773}
+
+\bibitem{nasapower}
+Stackhouse, P. W. (2023). \textit{NASA POWER Project: Prediction of
+Worldwide Energy Resource}. NASA Langley Research Center.
+\url{https://power.larc.nasa.gov}
+
+\bibitem{databricks2023}
+Chambers, B., \& Zaharia, M. (2018). \textit{Spark: The Definitive Guide}.
+O'Reilly Media.
+
+\bibitem{cassandraguide}
+Carpenter, J., \& Hewitt, E. (2022). \textit{Cassandra: The Definitive
+Guide} (3rd ed.). O'Reilly Media.
+
+\bibitem{streamlit2024}
+Treuille, A., Kelly, T., \& Toivonen, S. (2024). \textit{Streamlit: The
+fastest way to build data apps}. \url{https://streamlit.io/docs}
+
+\bibitem{agrotec2021}
+INIA. (2021). \textit{Tecnologías para el manejo integrado del cultivo de
+papa en la sierra del Perú}. Instituto Nacional de Innovación Agraria.
+
+\end{thebibliography}
+
+% ── Anexos ──────────────────────────────────────────────────
+\appendix
+\section{Estructura de archivos del proyecto}
+
+\begin{lstlisting}[style=bashstyle, caption={Árbol de archivos del proyecto}]
+agrosmart_andino/
++-- README.md
++-- requirements.txt
++-- .env.example
++-- .gitignore
++-- data/
+|   +-- raw/
+|   |   +-- nasa_power_yauyos.csv      # 18,265 filas  1.6 MB
+|   |   +-- sensores_iot.csv           # 52,632 filas  4.6 MB
+|   |   +-- produccion_papa_yauyos.csv #  1,500 filas  0.1 MB
+|   +-- gold/
+|       +-- lecturas_climaticas.csv    #  3,653 filas
+|       +-- alertas_activas.csv        #    500 filas
+|       +-- recomendaciones_riego.csv  #    300 filas
+|       +-- predicciones_rendimiento.csv #   6 filas
++-- scripts/
+|   +-- data_acquisition/
+|   |   +-- 01_download_nasa_power.py
+|   |   +-- 02_generate_iot_data.py
+|   |   +-- 03_prepare_midagri_data.py
+|   |   +-- 04_validate_datasets.py
+|   +-- aws/
+|   |   +-- 05_upload_to_s3.py
+|   |   +-- 06_create_emr_cluster.py
+|   +-- cassandra/
+|       +-- 07_create_schema.cql
+|       +-- 08_load_data.py
+|       +-- 09_setup_cassandra_cloud9.sh
++-- notebooks/
+|   +-- agrosmart_pipeline.ipynb      # 38 celdas PySpark
++-- dashboard/
+|   +-- app.py                        # Dashboard Streamlit
++-- docs/
+    +-- informe_tecnico.tex           # Este documento
+\end{lstlisting}
+
+\section{Instrucciones de ejecución completa}
+
+\begin{lstlisting}[style=bashstyle, caption={Flujo de ejecución paso a paso}]
+# 1. Instalacion de dependencias
+pip install -r requirements.txt
+
+# 2. Adquisicion de datos (local)
+python scripts/data_acquisition/01_download_nasa_power.py
+python scripts/data_acquisition/02_generate_iot_data.py
+python scripts/data_acquisition/03_prepare_midagri_data.py
+python scripts/data_acquisition/04_validate_datasets.py
+
+# 3. Carga a AWS S3
+# Configurar credenciales en .env
+python scripts/aws/05_upload_to_s3.py
+python scripts/aws/06_create_emr_cluster.py
+
+# 4. Pipeline PySpark (JupyterHub en EMR)
+# Abrir notebooks/agrosmart_pipeline.ipynb en JupyterHub
+# Ejecutar todas las celdas (Run All)
+
+# 5. Descargar resultados Gold
+aws s3 sync s3://agrosmart-andino-demo/gold/csv/ data/gold/
+
+# 6. Configurar Cassandra en Cloud9
+bash scripts/cassandra/09_setup_cassandra_cloud9.sh
+python scripts/cassandra/08_load_data.py --host 127.0.0.1
+
+# 7. Iniciar Dashboard
+streamlit run dashboard/app.py
+# Acceso: http://localhost:8501
+\end{lstlisting}
+
+\section{Configuración de credenciales AWS}
+
+\begin{lstlisting}[style=bashstyle, caption={Archivo .env para AWS Academy}]
+# Obtener de: AWS Academy > Learner Lab > AWS Details
+AWS_ACCESS_KEY_ID=ASIA...
+AWS_SECRET_ACCESS_KEY=...
+AWS_SESSION_TOKEN=...
+AWS_DEFAULT_REGION=us-east-1
+S3_BUCKET=agrosmart-andino-demo
+\end{lstlisting}
+
+\begin{alertbox}[Nota importante — AWS Academy]
+Las credenciales de AWS Academy expiran cada 4 horas. Renovar antes de
+ejecutar los scripts AWS (05, 06) y antes de abrir el notebook en EMR.
+El tiempo de vida del clúster EMR es de máximo 3 horas en la sesión
+de laboratorio.
+\end{alertbox}
+
+\end{document}

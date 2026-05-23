@@ -1,0 +1,32 @@
+# ──────────────────────────────────────────────
+# AgroSmart Andino — Dependencias Python
+# Curso Big Data | Maestría IA | UNI | Grupo 2
+# ──────────────────────────────────────────────
+
+# --- Adquisición de datos ---
+requests==2.31.0          # Llamadas a NASA POWER API
+pandas==2.1.4             # Manipulación de datos local
+numpy==1.26.3             # Cálculos numéricos y simulación IoT
+
+# --- Procesamiento y análisis ---
+pyarrow==14.0.2           # Lectura/escritura Parquet
+scipy==1.11.4             # Cálculos estadísticos (ET₀, correlaciones)
+
+# --- Visualización (EDA local y dashboard) ---
+matplotlib==3.8.2
+seaborn==0.13.1
+plotly==5.18.0            # Gráficos interactivos en Streamlit
+
+# --- Dashboard ---
+streamlit==1.29.0
+
+# --- AWS ---
+boto3==1.34.14            # SDK AWS para S3 upload
+
+# --- Cassandra ---
+cassandra-driver==3.29.0  # Conexión Python → Cassandra
+
+# --- Utilitarios ---
+python-dotenv==1.0.0      # Variables de entorno (.env para credenciales)
+faker==21.0.0             # Generación de datos sintéticos IoT
+tqdm==4.66.1              # Barra de progreso en scripts

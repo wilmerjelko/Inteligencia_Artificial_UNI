@@ -1,0 +1,7 @@
+anio,distrito,variedad,evento_climatico,sup_sembrada_ha,rendimiento_pred_tm_ha,produccion_estimada_tm,fecha_prediccion
+2025,Huangascar,Papa nativa (mix),normal,55.0,8.5,444.0,2025-01-01 00:00:00
+2025,Huangascar,Papa nativa (mix),helada,55.0,7.2,376.0,2025-01-01 00:00:00
+2025,Huangascar,Huayro,normal,55.0,8.5,444.0,2025-01-01 00:00:00
+2025,Huangascar,Huayro,helada,55.0,7.2,376.0,2025-01-01 00:00:00
+2025,Huangascar,Peruanita,normal,55.0,8.5,444.0,2025-01-01 00:00:00
+2025,Huangascar,Peruanita,helada,55.0,7.2,376.0,2025-01-01 00:00:00

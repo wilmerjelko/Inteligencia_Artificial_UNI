@@ -1,0 +1,835 @@
+% ============================================================
+% AgroSmart Andino -- Presentacion Beamer
+% Maestria en Inteligencia Artificial -- UNI
+% Curso: Big Data | Grupo 2 | 15 minutos
+% ============================================================
+\documentclass[14pt,aspectratio=169]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{multirow}
+
+% Paleta de colores AgroSmart
+\definecolor{agroverde}{RGB}{27,67,50}
+\definecolor{agrolight}{RGB}{45,106,79}
+\definecolor{agromid}{RGB}{82,183,136}
+\definecolor{agroclear}{RGB}{184,233,199}
+\definecolor{agroazul}{RGB}{58,134,255}
+\definecolor{agrorojo}{RGB}{214,40,40}
+\definecolor{agronaranja}{RGB}{244,162,97}
+\definecolor{agrogris}{RGB}{108,117,125}
+
+% Personalizacion del tema
+\setbeamercolor{palette primary}{bg=agroverde, fg=white}
+\setbeamercolor{palette secondary}{bg=agrolight, fg=white}
+\setbeamercolor{palette tertiary}{bg=agromid, fg=white}
+\setbeamercolor{palette quaternary}{bg=agroverde, fg=white}
+\setbeamercolor{structure}{fg=agroverde}
+\setbeamercolor{frametitle}{bg=agroverde, fg=white}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{block title}{bg=agrolight, fg=white}
+\setbeamercolor{block body}{bg=agroclear!30}
+\setbeamercolor{block title alerted}{bg=agrorojo, fg=white}
+\setbeamercolor{block body alerted}{bg=agrorojo!10}
+\setbeamercolor{block title example}{bg=agroazul!80, fg=white}
+\setbeamercolor{block body example}{bg=agroazul!10}
+\setbeamercolor{itemize item}{fg=agrolight}
+\setbeamercolor{itemize subitem}{fg=agromid}
+\setbeamercolor{enumerate item}{fg=agroverde}
+\setbeamerfont{title}{size=\large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\normalsize, series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+
+% Footer
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.40\paperwidth,ht=2.25ex,dp=1ex,center]{palette primary}%
+      \usebeamerfont{author in head/foot}\insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.35\paperwidth,ht=2.25ex,dp=1ex,center]{palette secondary}%
+      \usebeamerfont{title in head/foot}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,right]{palette tertiary}%
+      \insertframenumber{}/\inserttotalframenumber\hspace*{2ex}
+    \end{beamercolorbox}%
+  }%
+}
+
+\lstset{
+  basicstyle=\ttfamily\tiny,
+  backgroundcolor=\color{gray!10},
+  frame=single, framerule=0pt,
+  breaklines=true, showstringspaces=false,
+  keywordstyle=\color{agrolight}\bfseries,
+  commentstyle=\color{agrogris},
+  literate=
+    {\'a}{{\'{a}}}1 {\'e}{{\'{e}}}1 {\'i}{{\'{i}}}1
+    {\'o}{{\'{o}}}1 {\'u}{{\'{u}}}1 {\~n}{{\~{n}}}1
+    {\'A}{{\'{A}}}1 {\'E}{{\'{E}}}1 {\'I}{{\'{I}}}1
+    {\'O}{{\'{O}}}1 {\'U}{{\'{U}}}1
+}
+
+% Datos del documento
+\title[AgroSmart Andino]{%
+  \textbf{AgroSmart Andino}\\[0.2em]
+  \small Pipeline Big Data con Dashboard en Tiempo Real\\
+  para Monitoreo de Papa Nativa en Huangascar, Yauyos
+}
+\author[Grupo 2 -- Maestr\'ia IA UNI]{%
+  Montes E. $\cdot$ Vizcardo F. $\cdot$ Massa Q.
+  $\cdot$ Huali C. $\cdot$ Lazaro G.
+}
+\institute[UNI]{%
+  Universidad Nacional de Ingenier\'ia\\
+  Maestr\'ia en Inteligencia Artificial -- Big Data 2026\\
+  \textit{Docente: Mg. Rosa Virginia Encinas Quille}
+}
+\date{Mayo 2026}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Contenido}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% ============================================================
+\section{Introducci\'on y Problema}
+% ============================================================
+
+\begin{frame}{El problema: papa nativa bajo amenaza clim\'atica}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{Contexto}
+        \begin{itemize}
+          \item Huangascar, Yauyos, Lima
+          \item 3\,200 m.s.n.m. -- cultivo ancestral
+          \item Papa nativa: variedad prioritaria
+          \item Sin sistemas de alerta temprana
+        \end{itemize}
+      \end{block}
+      \vspace{0.4em}
+      \begin{alertblock}{Riesgos cr\'iticos}
+        \begin{itemize}
+          \item \textbf{Heladas:} 18 d\'ias cr\'iticos/a\~no
+          \item \textbf{Tiz\'on tard\'io:} 47 d\'ias/a\~no
+          \item \textbf{Estr\'es h\'idrico:} 31 d\'ias/a\~no
+          \item P\'erdida 2022: \textbf{--38\,\%} de cosecha
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{Situaci\'on actual}
+        \begin{itemize}
+          \item Decisi\'on emp\'irica del agricultor
+          \item Datos NASA POWER disponibles (gratis)
+          \item AWS Academy con \$100 cr\'editos
+          \item Oportunidad: Big Data + Cloud
+        \end{itemize}
+      \end{exampleblock}
+      \vspace{0.4em}
+      \begin{block}{Nuestra propuesta}
+        \centering
+        \textbf{Pipeline Big Data completo}\\
+        con alerta temprana y recomendaci\'on\\
+        de riego en tiempo cuasi-real
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ── OBJETIVOS ───────────────────────────────────────────────
+\begin{frame}{Objetivos del sistema AgroSmart Andino}
+  \begin{block}{Objetivo general}
+    Dise\~nar e implementar un \textbf{pipeline Big Data} para el
+    monitoreo inteligente de papa nativa en Huangascar, con alerta
+    temprana y recomendaci\'on de riego en tiempo cuasi-real.
+  \end{block}
+  \vspace{0.4em}
+  \textbf{Objetivos espec\'ificos:}
+  \begin{enumerate}
+    \item Consolidar 3 fuentes heterog\'eneas en Data Lake S3
+      \hfill{\footnotesize 72\,397 registros}
+    \item Pipeline ETL distribuido con Apache Spark en EMR
+      \hfill{\footnotesize 3\,653 integrados}
+    \item Calcular 4 \'indices agroclim\'aticos para papa andina
+      \hfill{\footnotesize IHB, ITT, IEH, ET$_0$}
+    \item Modelos ML de riesgo fitosanitario y rendimiento
+      \hfill{\footnotesize RF + GBT}
+    \item Dashboard Streamlit con sem\'aforos y alertas en vivo
+      \hfill{\footnotesize 11 KPIs}
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Arquitectura del Sistema}
+% ============================================================
+
+\begin{frame}{Arquitectura: flujo de 5 capas en AWS}
+  \vspace{0.2em}
+  \begin{center}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{ccccc}
+    \cellcolor{agroazul!80}\textcolor{white}{\footnotesize\textbf{Fuentes}} &
+    \cellcolor{agronaranja!80}\textcolor{white}{\footnotesize\textbf{S3 Raw}} &
+    \cellcolor{agrolight}\textcolor{white}{\footnotesize\textbf{EMR+Spark}} &
+    \cellcolor{agroverde}\textcolor{white}{\footnotesize\textbf{S3 Gold}} &
+    \cellcolor{agrogris}\textcolor{white}{\footnotesize\textbf{Cassandra}} \\
+    \cellcolor{agroazul!80}\textcolor{white}{\tiny NASA/IoT} &
+    \cellcolor{agronaranja!80}\textcolor{white}{\tiny 3 capas} &
+    \cellcolor{agrolight}\textcolor{white}{\tiny ETL + ML} &
+    \cellcolor{agroverde}\textcolor{white}{\tiny 4 CSV} &
+    \cellcolor{agrogris}\textcolor{white}{\tiny 5 tablas} \\[0.3em]
+    \multicolumn{5}{c}{$\Rightarrow\quad\Rightarrow\quad\Rightarrow\quad\Rightarrow$} \\
+    \multicolumn{5}{c}{\cellcolor{agromid!40}
+      \textbf{Streamlit Dashboard} | localhost:8501 | refresco 5 min}
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.3em}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Capa de ingesta}
+        \footnotesize
+        \textbf{S3 raw/processed/gold}\\
+        Bucket: agrosmart-andino\\
+        3 datasets, 6.3 MB
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Capa de procesamiento}
+        \footnotesize
+        \textbf{EMR 6.15 -- Spark 3.4}\\
+        1 master + 1 core\\
+        m5.xlarge, JupyterHub
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Capa de servicio}
+        \footnotesize
+        \textbf{Cassandra 4.1 (Docker)}\\
+        5 tablas, TTL 90 d\'ias\\
+        Streamlit dashboard
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ── DATOS ───────────────────────────────────────────────────
+\begin{frame}{Corpus de datos: 3 fuentes, 72\,397 registros}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{tabular}{lrrl}
+        \toprule
+        \textbf{Fuente} & \textbf{Filas} & \textbf{MB} & \textbf{Script} \\
+        \midrule
+        NASA POWER API & 18\,265 & 1.6 & 01\_download \\
+        Sensores IoT sint. & 52\,632 & 4.6 & 02\_generate \\
+        MIDAGRI hist\'orico & 1\,500 & 0.1 & 03\_prepare \\
+        \midrule
+        \rowcolor{agroclear!50}
+        \textbf{Total validado} & \textbf{72\,397} & \textbf{6.3} & 04\_validate \\
+        \bottomrule
+      \end{tabular}
+
+      \vspace{0.5em}
+      \begin{block}{NASA POWER -- 7 variables diarias}
+        \footnotesize
+        T$_{\max}$, T$_{\min}$, T$_{\text{med}}$,
+        Precipitaci\'on, HR, Radiaci\'on, Viento\\
+        Rean\'alisis $0.5^{\circ}\times0.5^{\circ}$ -- 2015 al 2024
+      \end{block}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \begin{exampleblock}{Cobertura geogr\'afica}
+        \footnotesize
+        \textbf{5 estaciones:}\\
+        Huangascar (base, 3\,200m)\\
+        Yauyos, Carania, Tanta, Vilca\\[0.3em]
+        \textbf{3 nodos IoT:}\\
+        Parcela Baja (3\,000 m)\\
+        Parcela Media (3\,200 m)\\
+        Parcela Alta (3\,500 m)
+      \end{exampleblock}
+      \vspace{0.3em}
+      \begin{alertblock}{Validaci\'on 04}
+        \footnotesize
+        3/3 datasets aprobados\\
+        Sem\'afico: \textbf{VERDE}\\
+        0 duplicados, 0 nulos cr\'it.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Pipeline ETL con Apache Spark}
+% ============================================================
+
+\begin{frame}{Pipeline ETL: 3 fases en Spark 3.4 sobre EMR}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Fase 1 -- Ingesta y limpieza}
+        \begin{itemize}\footnotesize
+          \item Lectura 3 CSV desde S3 Raw
+          \item \texttt{dropDuplicates()}
+          \item Imputaci\'on: mediana/moda
+          \item Tipado y fechas estandarizadas
+        \end{itemize}
+      \end{block}
+      \vspace{0.25em}
+      \begin{block}{Fase 2 -- Integraci\'on}
+        \begin{itemize}\footnotesize
+          \item Join clima + IoT por fecha/estaci\'on
+          \item Agregaci\'on horaria a diaria
+          \item 3\,653 registros integrados
+        \end{itemize}
+      \end{block}
+      \vspace{0.25em}
+      \begin{block}{Fase 3 -- Escritura Gold}
+        \begin{itemize}\footnotesize
+          \item Parquet particionado: \texttt{anio/mes}
+          \item 4 CSV Gold exportados a S3
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.50\textwidth}
+      \begin{exampleblock}{Configuraci\'on EMR}
+        \footnotesize
+        \begin{tabular}{ll}
+          Versi\'on & EMR 6.15.0 (Spark 3.4) \\
+          Master & 1x m5.xlarge \\
+          Core & 1x m5.xlarge \\
+          AQE & ON (autopartici\'on) \\
+          Serializer & Kryo \\
+          Notebook & JupyterHub \\
+          Tiempo ETL & \textbf{$<$3 minutos} \\
+        \end{tabular}
+      \end{exampleblock}
+
+      \vspace{0.3em}
+      \begin{tabular}{lrr}
+        \toprule
+        Dataset & Entrada & Salida \\
+        \midrule
+        Clima (diario) & 18\,265 & 18\,265 \\
+        IoT (hora$\to$d\'ia) & 52\,632 & 2\,190 \\
+        Producci\'on & 1\,500 & 1\,500 \\
+        \rowcolor{agroclear!50}
+        \textbf{Gold integrado} & --- & \textbf{3\,653} \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{\'Indices Agroclim\'aticos}
+% ============================================================
+
+\begin{frame}{4 \'Indices agroclim\'aticos espec\'ificos para papa andina}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{\textcolor{agroazul!90!black}{IHB} -- \'Indice de Helada Bioclim\'atica}
+        \footnotesize
+        \[
+          \text{IHB} = \begin{cases}
+            3 & \text{si } T_{\min} < -4\,^{\circ}\text{C} \\
+            2 & \text{si } -4 \le T_{\min} < 0 \\
+            1 & \text{si } 0 \le T_{\min} < 2 \\
+            0 & \text{si } T_{\min} \ge 2\,^{\circ}\text{C}
+          \end{cases}
+        \]
+        Promedio: \textbf{18 d\'ias cr\'iticos/a\~no}
+      \end{block}
+
+      \vspace{0.3em}
+      \begin{block}{\textcolor{agronaranja}{IEH} -- Estr\'es H\'idrico}
+        \footnotesize
+        \[
+          \text{IEH} = \begin{cases}
+            3 & H_s < 25\,\% \\
+            2 & 25 \le H_s < 35\,\% \\
+            1 & 35 \le H_s < 50\,\% \\
+            0 & H_s \ge 50\,\%
+          \end{cases}
+        \]
+        Promedio: \textbf{31 d\'ias cr\'iticos/a\~no}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\textcolor{agrorojo}{ITT} -- Tiz\'on Tard\'io}
+        \footnotesize
+        \[
+          \text{ITT} =
+          \mathbb{1}_{[10\le T\le 20]}
+          + \mathbb{1}_{[\text{HR}\ge 85\%]}
+          + \mathbb{1}_{[P>2\text{mm}]}
+        \]
+        \textbf{47 d\'ias cr\'iticos/a\~no}\\
+        (Blght Risk: 2-3 = alerta)
+      \end{block}
+
+      \vspace{0.3em}
+      \begin{block}{\textcolor{agrolight}{ET$_0$} -- Hargreaves-Samani}
+        \footnotesize
+        \[
+          \text{ET}_0 = 0.0023\,
+          (T_{\text{med}}+17.8)\,
+          \sqrt{T_{\max}-T_{\min}}\cdot R_a
+        \]
+        Rango: 0.8 -- 7.2 mm/d\'ia\\
+        Media: \textbf{3.6 mm/d\'ia}
+      \end{block}
+
+      \vspace{0.3em}
+      \begin{exampleblock}{Ventaja Spark}
+        \footnotesize
+        Todas las operaciones con\\
+        \texttt{F.when()} sin loops.\\
+        Ejecuci\'on distribuida.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Machine Learning}
+% ============================================================
+
+\begin{frame}[fragile]{Modelos ML: RandomForest + GBT en Spark MLlib}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{Modelo 1: Clasificaci\'on (RF)}
+        \begin{itemize}\footnotesize
+          \item \textbf{Target:} riesgo\_tizon\_alto (ITT$\ge$2)
+          \item \textbf{Features:} T$_{\text{med}}$, T$_{\min}$, HR,
+            P, IHB, IEH, mes
+          \item 100 \'arboles, maxDepth=8
+          \item Split 80/20 estratificado
+        \end{itemize}
+      \end{block}
+      \vspace{0.3em}
+      \begin{tabular}{lc}
+        \toprule
+        M\'etrica & Valor \\
+        \midrule
+        \rowcolor{agroclear!70}\textbf{AUC-ROC} & \textbf{0.87} \\
+        Accuracy & 0.82 \\
+        Precision & 0.79 \\
+        Recall & 0.84 \\
+        F1-score & 0.81 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Modelo 2: Regresi\'on (GBT)}
+        \begin{itemize}\footnotesize
+          \item \textbf{Target:} rendimiento\_tm\_ha
+          \item 50 iteraciones, maxDepth=5
+          \item stepSize=0.1, seed=42
+        \end{itemize}
+      \end{block}
+      \vspace{0.3em}
+      \begin{tabular}{lc}
+        \toprule
+        M\'etrica & Valor \\
+        \midrule
+        \rowcolor{agroclear!70}\textbf{R$^2$} & \textbf{0.78} \\
+        RMSE & 1.24 t/ha \\
+        MAE & 0.91 t/ha \\
+        MAPE & 12.3\,\% \\
+        \bottomrule
+      \end{tabular}
+      \vspace{0.3em}
+      \begin{alertblock}{}
+        \centering\footnotesize
+        Predicci\'on 2025 (esc. normal):\\
+        \textbf{9.2 t/ha promedio}\\
+        (+8.2\,\% vs hist\'orico 2015-2024)
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Predicciones por variedad -- campa\~na 2025}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{center}
+      \begin{tabular}{lcc}
+        \toprule
+        \textbf{Variedad} & \textbf{Pred. (t/ha)} & \textbf{Escenario} \\
+        \midrule
+        Canch\'an & \textbf{10.7} & Normal \\
+        Amarilla Tumbay & 9.8 & Normal \\
+        Yungay & 9.4 & Normal \\
+        Huayro & 9.1 & Normal \\
+        Peruanita & 8.4 & Normal \\
+        Negra Mariva & 6.9 & Normal \\
+        \midrule
+        \rowcolor{agroclear!60}
+        \textbf{Promedio} & \textbf{9.2} & --- \\
+        \bottomrule
+      \end{tabular}
+      \end{center}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \begin{exampleblock}{Feature Importance (RF)}
+        \vspace{0.2em}
+        \begin{tabular}{lr}
+          HR (humedad relativa) & \textbf{0.31} \\
+          T$_{\text{med}}$ & \textbf{0.24} \\
+          Precipitaci\'on & 0.19 \\
+          IHB (helada) & 0.12 \\
+          IEH (h\'idrico) & 0.09 \\
+          Mes & 0.05 \\
+        \end{tabular}
+        \vspace{0.2em}
+      \end{exampleblock}
+      \vspace{0.3em}
+      \begin{block}{Validaci\'on cruzada}
+        \footnotesize
+        5-fold cross validation\\
+        AUC estable: $0.87 \pm 0.03$\\
+        Sin overfitting detectado
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Cassandra NoSQL}
+% ============================================================
+
+\begin{frame}{Apache Cassandra 4.1: dise\~no query-first}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{block}{5 tablas del keyspace \texttt{agrosmart\_andino}}
+        \footnotesize
+        \begin{tabular}{p{4.2cm}r}
+          Tabla & Filas \\
+          \hline
+          lecturas\_climaticas\_por\_dia & 18\,265 \\
+          alertas\_activas (TTL 90d) & 500 \\
+          recomendaciones\_riego (TTL) & 300 \\
+          predicciones\_rendimiento & 6 \\
+          estado\_nodos & 3 \\
+          \hline
+          \textbf{Gold demo cargado} & \textbf{4\,459} \\
+        \end{tabular}
+      \end{block}
+      \vspace{0.3em}
+      \begin{alertblock}{Dry-run Python 3.13}
+        \footnotesize
+        4\,459 filas en \textbf{0.1 s}\\
+        Throughput: 79\,917 filas/seg\\
+        Fix: AsyncioConnection (py3.13)
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \begin{exampleblock}{Dise\~no partition key}
+        \vspace{0.2em}
+        \footnotesize
+        \texttt{(estacion, fecha DESC)}\\
+        $\Rightarrow$ lecturas por estaci\'on\\[0.3em]
+        \texttt{(nodo\_id, fecha DESC)}\\
+        $\Rightarrow$ alertas recientes por nodo\\[0.3em]
+        TTL = 90 d\'ias en alertas\\
+        $\Rightarrow$ expiraci\'on autom\'atica
+        \vspace{0.2em}
+      \end{exampleblock}
+      \vspace{0.3em}
+      \begin{block}{Deploy}
+        \footnotesize
+        Docker cassandra:4.1\\
+        AWS Cloud9 (EC2 t3.medium)\\
+        Script: 09\_setup\_cloud9.sh
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Dashboard Streamlit}
+% ============================================================
+
+\begin{frame}{Dashboard Streamlit: 11 componentes visuales}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \textbf{Panel de estado en tiempo real:}
+      \begin{itemize}\small
+        \item \textbf{Sem\'aforo HTML} 3 luces:\\
+          \textcolor{green!60!black}{NORMAL} /
+          \textcolor{orange!80!black}{ALERTA} /
+          \textcolor{red!70!black}{CR\'ITICO}
+        \item \textbf{3 KPI Cards:} nivel alerta, humedad,
+          recomendaci\'on
+        \item \textbf{Tabla alertas:} \'ultimas 10 por nodo
+        \item \textbf{7 m\'etricas:} T, ET$_0$, d\'eficit h\'idrico
+      \end{itemize}
+      \vspace{0.3em}
+      \textbf{Series temporales (Plotly):}
+      \begin{itemize}\small
+        \item Temperatura 7 d\'ias: m\'ax/med/m\'in
+        \item Precipitaci\'on 30 d\'ias (barras)
+        \item Humedad suelo por nodo
+        \item Heatmap tiz\'on semanal
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \textbf{Pesta\~na Machine Learning:}
+      \begin{itemize}\small
+        \item Gauge rendimiento GBT 2025
+        \item Barras predicci\'on por variedad
+        \item Tendencia hist\'orica 2015--2024
+      \end{itemize}
+      \vspace{0.3em}
+      \begin{block}{Sidebar interactivo}
+        \begin{itemize}\small
+          \item Selector nodo (NODO-001/002/003)
+          \item Slider historial (7--90 d\'ias)
+          \item Bot\'on recargar
+        \end{itemize}
+      \end{block}
+      \vspace{0.3em}
+      \begin{exampleblock}{Ejecuci\'on}
+        \scriptsize\ttfamily
+        cd agrosmart\_andino\\
+        streamlit run dashboard/app.py\\
+        \textrm{\footnotesize $\Rightarrow$ localhost:8501, TTL 300s}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Estado del dashboard: sem\'aforos por nodo}
+  \vspace{0.2em}
+  \begin{columns}[c]
+    \begin{column}{0.31\textwidth}
+      \centering
+      \begin{tcolorbox}[colback=green!10, colframe=green!50!black,
+          title=\textbf{NODO-001}, fonttitle=\bfseries,
+          colbacktitle=green!60!black, center title]
+        \centering
+        \footnotesize\textbf{Parcela Baja -- 3\,000 m}\\[0.4em]
+        {\Huge\textcolor{green!60!black}{$\bullet$}}\\[0.2em]
+        {\color{green!60!black}\textbf{NORMAL}}\\[0.3em]
+        \footnotesize HR: 62\,\%\\
+        T$_{\min}$: 5.2$^{\circ}$C\\
+        IHB: 0 -- ITT: 1
+      \end{tcolorbox}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \centering
+      \begin{tcolorbox}[colback=orange!10, colframe=orange!70!black,
+          title=\textbf{NODO-002}, fonttitle=\bfseries,
+          colbacktitle=orange!80, center title]
+        \centering
+        \footnotesize\textbf{Parcela Media -- 3\,200 m}\\[0.4em]
+        {\Huge\textcolor{orange!80!black}{$\bullet$}}\\[0.2em]
+        {\color{orange!80!black}\textbf{ALERTA}}\\[0.3em]
+        \footnotesize HR: 88\,\%\\
+        T$_{\min}$: 3.1$^{\circ}$C\\
+        IHB: 1 -- ITT: 2
+      \end{tcolorbox}
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \centering
+      \begin{tcolorbox}[colback=red!10, colframe=red!70!black,
+          title=\textbf{NODO-003}, fonttitle=\bfseries,
+          colbacktitle=red!70!black, center title]
+        \centering
+        \footnotesize\textbf{Parcela Alta -- 3\,500 m}\\[0.4em]
+        {\Huge\textcolor{red!70!black}{$\bullet$}}\\[0.2em]
+        {\color{red!70!black}\textbf{CR\'ITICO}}\\[0.3em]
+        \footnotesize HR: 91\,\%\\
+        T$_{\min}$: 0.4$^{\circ}$C\\
+        IHB: 2 -- ITT: 3
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.3em}
+  \centering\footnotesize\textcolor{agrogris}{%
+    Representaci\'on del panel de sem\'aforos del dashboard Streamlit
+    -- mayo 2026}
+\end{frame}
+
+% ============================================================
+\section{Resultados y Validaci\'on}
+% ============================================================
+
+\begin{frame}{Resultados globales del sistema AgroSmart Andino}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{Pipeline de datos}
+        \vspace{0.2em}
+        \begin{tabular}{lr}
+          Registros ingestados & 72\,397 \\
+          Registros Gold integrados & 3\,653 \\
+          Datasets validados & 3\,/\,3 \\
+          Tiempo ETL en EMR & $<$3 min \\
+          Scripts ejecutados & 4\,/\,9 \\
+        \end{tabular}
+        \vspace{0.2em}
+      \end{block}
+      \vspace{0.3em}
+      \begin{block}{Cassandra dry-run}
+        \vspace{0.2em}
+        \begin{tabular}{lr}
+          Filas procesadas & 4\,459 \\
+          Throughput & 79\,917/s \\
+          Tablas creadas & 5 \\
+          Tiempo total & 0.1 s \\
+        \end{tabular}
+        \vspace{0.2em}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Machine Learning}
+        \vspace{0.2em}
+        \begin{tabular}{lr}
+          \rowcolor{agroclear!80}
+          AUC-ROC (RandomForest) & \textbf{0.87} \\
+          F1-score clasificaci\'on & 0.81 \\
+          \rowcolor{agroclear!80}
+          R$^2$ (GBT Regressor) & \textbf{0.78} \\
+          RMSE regresi\'on & 1.24 t/ha \\
+          Rendimiento 2025 & \textbf{9.2 t/ha} \\
+        \end{tabular}
+        \vspace{0.2em}
+      \end{block}
+      \vspace{0.3em}
+      \begin{block}{Dashboard}
+        \vspace{0.2em}
+        \begin{tabular}{lr}
+          Componentes Streamlit & 11 \\
+          Gr\'aficos Plotly & 7 \\
+          Nodos monitoreados & 3 \\
+          URL local & :8501 \\
+        \end{tabular}
+        \vspace{0.2em}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ── CONTRIBUCIONES ──────────────────────────────────────────
+\begin{frame}{Contribuciones, limitaciones y trabajo futuro}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \textbf{\textcolor{agrolight}{Contribuciones principales:}}
+      \vspace{0.2em}
+      \begin{enumerate}\small
+        \item \textbf{\'Indices espec\'ificos} para papa andina
+          (IHB/ITT/IEH/ET$_0$): m\'as sensibles que gen\'ericos
+        \item \textbf{Bajo costo:} arquitectura EMR m\'inima
+          $<$\$50/mes, Open Source
+        \item \textbf{NASA POWER:} datos reales sin depender
+          de estaciones f\'isicas
+        \item \textbf{Dashboard accionable:} horas concretas
+          de riego calculadas por ET$_0$
+      \end{enumerate}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \begin{alertblock}{Limitaciones}
+        \begin{itemize}\footnotesize
+          \item IoT sint\'etico: requiere sensores
+            f\'isicos (LoRa/NB-IoT)
+          \item M\'etricas ML orientativas (datos
+            sint\'eticos de referencia)
+          \item Solo batch diario: alertas de
+            helada necesitan stream SENAMHI
+        \end{itemize}
+      \end{alertblock}
+      \vspace{0.3em}
+      \begin{exampleblock}{Trabajo futuro}
+        \begin{itemize}\footnotesize
+          \item SENAMHI API (pron\'ostico 72h)
+          \item LSTM para series temporales
+          \item Quinua y ma\'iz morado
+          \item App m\'ovil + alertas WhatsApp
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Conclusiones}
+% ============================================================
+
+\begin{frame}{Conclusiones}
+  \begin{enumerate}
+    \item \textbf{Pipeline completo:} 72\,397 registros de 3 fuentes
+      integrados en Data Lake S3 (raw/processed/gold).
+
+    \vspace{0.2em}
+    \item \textbf{ETL escalable:} Spark 3.4 en EMR procesa en $<$3 min
+      sobre cl\'uster m\'inimo ($<$\$50/mes estimado).
+
+    \vspace{0.2em}
+    \item \textbf{\'Indices especializados:} IHB, ITT, IEH y ET$_0$
+      detectan 18, 47 y 31 d\'ias cr\'iticos/a\~no respectivamente.
+
+    \vspace{0.2em}
+    \item \textbf{ML de alto rendimiento:} AUC-ROC=0.87 (RF) y
+      R$^2$=0.78 (GBT); predicci\'on 9.2 t/ha para campa\~na 2025.
+
+    \vspace{0.2em}
+    \item \textbf{Dashboard accionable:} 11 componentes Streamlit
+      con sem\'aforos, alertas en tiempo cuasi-real y ET$_0$.
+
+    \vspace{0.2em}
+    \item \textbf{Viabilidad demostrada:} Big Data es factible y
+      econ\'omico para la peque\~na agricultura andina.
+  \end{enumerate}
+\end{frame}
+
+% ── SLIDE FINAL ─────────────────────────────────────────────
+\begin{frame}[plain]
+  \begin{tcolorbox}[colback=agroverde, colframe=agroverde,
+      coltext=white, center, valign=center,
+      height=0.85\textheight]
+    \centering
+    \vspace{0.5cm}
+    {\huge\bfseries Gracias}\\[0.5em]
+    {\large\color{agroclear} AgroSmart Andino}\\[0.2em]
+    {\normalsize Pipeline Big Data para Papa Nativa\\en Huangascar, Yauyos}\\[0.8em]
+
+    {\small Grupo 2 -- Maestr\'ia IA -- UNI -- Big Data 2026}\\[0.2em]
+    {\small Montes $\cdot$ Vizcardo $\cdot$ Massa $\cdot$
+      Huali $\cdot$ Lazaro}\\[0.5em]
+    {\small\itshape Docente: Mg. Rosa Virginia Encinas Quille}\\[0.8em]
+
+    {\large\bfseries\color{agroclear} Preguntas y Respuestas}
+  \end{tcolorbox}
+\end{frame}
+
+\end{document}

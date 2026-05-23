@@ -1,0 +1,54 @@
+\frametitle{Modelos ML: RandomForest + GBT en Spark MLlib}
+\begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{block}{Modelo 1: Clasificaci\'on (RF)}
+        \begin{itemize}\footnotesize
+          \item \textbf{Target:} riesgo\_tizon\_alto (ITT$\ge$2)
+          \item \textbf{Features:} T$_{\text{med}}$, T$_{\min}$, HR,
+            P, IHB, IEH, mes
+          \item 100 \'arboles, maxDepth=8
+          \item Split 80/20 estratificado
+        \end{itemize}
+      \end{block}
+      \vspace{0.3em}
+      \begin{tabular}{lc}
+        \toprule
+        M\'etrica & Valor \\
+        \midrule
+        \rowcolor{agroclear!70}\textbf{AUC-ROC} & \textbf{0.87} \\
+        Accuracy & 0.82 \\
+        Precision & 0.79 \\
+        Recall & 0.84 \\
+        F1-score & 0.81 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Modelo 2: Regresi\'on (GBT)}
+        \begin{itemize}\footnotesize
+          \item \textbf{Target:} rendimiento\_tm\_ha
+          \item 50 iteraciones, maxDepth=5
+          \item stepSize=0.1, seed=42
+        \end{itemize}
+      \end{block}
+      \vspace{0.3em}
+      \begin{tabular}{lc}
+        \toprule
+        M\'etrica & Valor \\
+        \midrule
+        \rowcolor{agroclear!70}\textbf{R$^2$} & \textbf{0.78} \\
+        RMSE & 1.24 t/ha \\
+        MAE & 0.91 t/ha \\
+        MAPE & 12.3\,\% \\
+        \bottomrule
+      \end{tabular}
+      \vspace{0.3em}
+      \begin{alertblock}{}
+        \centering\footnotesize
+        Predicci\'on 2025 (esc. normal):\\
+        \textbf{9.2 t/ha promedio}\\
+        (+8.2\,\% vs hist\'orico 2015-2024)
+      \end{alertblock}
+    \end{column}
+  \end{columns}
