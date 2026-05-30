@@ -1,0 +1,11 @@
+{
+  "config": "/content/drive/MyDrive/MyDrive_parcial_redes/Parcial_Parte_1/configs/config_ablation_scratch.yaml",
+  "test_metrics": {
+    "accuracy": 0.7723076923076924,
+    "precision": 0.788135593220339,
+    "recall": 0.8857142857142857,
+    "f1": 0.8340807174887892,
+    "auc": 0.8319668737060041,
+    "threshold": 0.1
+  }
+}

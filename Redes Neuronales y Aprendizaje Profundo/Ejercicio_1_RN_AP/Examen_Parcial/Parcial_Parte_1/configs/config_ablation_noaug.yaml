@@ -1,0 +1,18 @@
+# Ablacion 3: ResNet-50 + BCE SIN augmentation (solo eval_tf en train)
+model: resnet50
+freeze_backbone: true
+loss: bce
+augmentation: false
+img_size: 224
+batch_size: 32
+seed: 42
+val_split: 0.15
+epochs_head: 5
+epochs: 15
+patience: 5
+lr_head: 0.001
+lr_ft: 0.0001
+ft_layers: [layer3, layer4, fc]
+checkpoint_name: resnet50_noaug.pt
+run_error_analysis: false
+# data_dir: tire_data/Tire Textures

@@ -1,0 +1,132 @@
+{
+  "runs": {
+    "baseline": {
+      "model": "resnet50",
+      "config": "config_baseline.yaml",
+      "augmentation": true,
+      "loss": "bce",
+      "test_thr05": {
+        "accuracy": 0.72,
+        "precision": 0.983739837398374,
+        "recall": 0.5761904761904761,
+        "f1": 0.7267267267267268,
+        "auc": 0.9416563146997929
+      },
+      "test_thr_opt": {
+        "accuracy": 0.8738461538461538,
+        "precision": 0.916256157635468,
+        "recall": 0.8857142857142857,
+        "f1": 0.9007263922518159,
+        "auc": 0.9416563146997929,
+        "threshold": 0.05
+      },
+      "cm_opt": {
+        "tn": 98,
+        "fp": 17,
+        "fn": 24,
+        "tp": 186
+      },
+      "dataset": {
+        "train": 597,
+        "val": 106,
+        "test": 325
+      }
+    },
+    "ablation_focal": {
+      "model": "resnet50",
+      "config": "config_ablation_focal.yaml",
+      "augmentation": true,
+      "loss": "focal",
+      "test_thr05": {
+        "accuracy": 0.6861538461538461,
+        "precision": 0.9821428571428571,
+        "recall": 0.5238095238095238,
+        "f1": 0.6832298136645962,
+        "auc": 0.9190062111801243
+      },
+      "test_thr_opt": {
+        "accuracy": 0.8369230769230769,
+        "precision": 0.8369098712446352,
+        "recall": 0.9285714285714286,
+        "f1": 0.8803611738148984,
+        "auc": 0.9190062111801243,
+        "threshold": 0.24000000000000005
+      },
+      "cm_opt": {
+        "tn": 77,
+        "fp": 38,
+        "fn": 15,
+        "tp": 195
+      },
+      "dataset": {
+        "train": 597,
+        "val": 106,
+        "test": 325
+      }
+    },
+    "ablation_noaug": {
+      "model": "resnet50",
+      "config": "config_ablation_noaug.yaml",
+      "augmentation": false,
+      "loss": "bce",
+      "test_thr05": {
+        "accuracy": 0.7261538461538461,
+        "precision": 0.991869918699187,
+        "recall": 0.580952380952381,
+        "f1": 0.7327327327327328,
+        "auc": 0.9656728778467908
+      },
+      "test_thr_opt": {
+        "accuracy": 0.9076923076923077,
+        "precision": 0.9285714285714286,
+        "recall": 0.9285714285714286,
+        "f1": 0.9285714285714286,
+        "auc": 0.9656728778467908,
+        "threshold": 0.05
+      },
+      "cm_opt": {
+        "tn": 100,
+        "fp": 15,
+        "fn": 15,
+        "tp": 195
+      },
+      "dataset": {
+        "train": 597,
+        "val": 106,
+        "test": 325
+      }
+    },
+    "ablation_scratch": {
+      "model": "tirecnn",
+      "config": "config_ablation_scratch.yaml",
+      "augmentation": true,
+      "loss": "bce",
+      "test_thr05": {
+        "accuracy": 0.6,
+        "precision": 0.9444444444444444,
+        "recall": 0.40476190476190477,
+        "f1": 0.5666666666666667,
+        "auc": 0.8319668737060041
+      },
+      "test_thr_opt": {
+        "accuracy": 0.7723076923076924,
+        "precision": 0.788135593220339,
+        "recall": 0.8857142857142857,
+        "f1": 0.8340807174887892,
+        "auc": 0.8319668737060041,
+        "threshold": 0.1
+      },
+      "cm_opt": {
+        "tn": 65,
+        "fp": 50,
+        "fn": 24,
+        "tp": 186
+      },
+      "dataset": {
+        "train": 597,
+        "val": 106,
+        "test": 325
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# Configuracion base: ResNet-50 con BCE + augmentation completa
+# Reproduce los resultados reportados en el informe (F1=0.844, AUC=0.960)
+#
+# Uso:
+#   python src/main.py --config configs/config_baseline.yaml --data_dir /ruta/dataset
+#
+# Kaggle: data_dir: /kaggle/input/tire-texture-image-recognition/Tire Textures
+# Colab:  data_dir: /content/drive/MyDrive/tire_data/Tire Textures
+# Local:  data_dir: tire_data/Tire Textures
+
+model: resnet50
+freeze_backbone: true
+
+loss: bce
+augmentation: true
+img_size: 224
+batch_size: 32
+seed: 42
+val_split: 0.15
+
+epochs_head: 10
+epochs: 50
+patience: 15   # 15 epocas de paciencia: da mas margen al CosineAnnealingLR en Colab T4
+lr_head: 0.001
+lr_ft: 0.0001
+ft_layers: [layer3, layer4, fc]
+
+checkpoint_name: resnet50.pt
+run_error_analysis: true
+
+# data_dir debe especificarse via --data_dir o descomentando la linea siguiente:
+# data_dir: tire_data/Tire Textures

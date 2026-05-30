@@ -1,0 +1,18 @@
+# Dataset descargado por el notebook (Kaggle, ~750 MB) — no versionar
+tire_data/
+
+# Modelos entrenados (archivos .pt grandes, >100 MB) — no versionar
+checkpoints/
+
+# Artefactos generados al ejecutar el pipeline — se regeneran con main.py
+outputs/
+figures/
+figures_prev/
+
+# Caches y artefactos de Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Credenciales de Kaggle (nunca subir)
+kaggle.json
